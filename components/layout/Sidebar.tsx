@@ -69,10 +69,10 @@ const NAV_ITEMS = [
     group: "AKSES & KEAMANAN",
     items: [
       {
-        label: "Login, Daftar & OTP",
+        label: "Login Staf (8 Desain)",
         href: "/auth",
         icon: KeyRound,
-        badge: "2FA",
+        badge: "8 Opsi",
       },
     ],
   },

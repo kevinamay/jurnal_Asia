@@ -1,6 +1,5 @@
-import AuthPage from "../auth/page";
+import { Variant2GlassCard } from "@/components/auth-variants/Variant2GlassCard";
 
 export default function RegisterPage() {
-  return <AuthPage />;
+  return <Variant2GlassCard />;
 }
-
