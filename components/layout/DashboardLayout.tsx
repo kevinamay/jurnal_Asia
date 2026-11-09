@@ -1,5 +1,8 @@
+"use client";
+
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
+import { AccountingProvider } from "@/context/AccountingContext";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -7,21 +10,23 @@ interface DashboardLayoutProps {
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div className="flex min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
-      {/* Fixed Left Sidebar */}
-      <Sidebar />
+    <AccountingProvider>
+      <div className="flex min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
+        {/* Fixed Left Sidebar */}
+        <Sidebar />
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Sticky Top Header */}
-        <Topbar />
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Sticky Top Header */}
+          <Topbar />
 
-        {/* Dynamic Page Content */}
-        <main className="flex-1 p-6 max-w-7xl w-full mx-auto space-y-6">
-          {children}
-        </main>
+          {/* Dynamic Page Content */}
+          <main className="flex-1 p-6 max-w-7xl w-full mx-auto space-y-6">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </AccountingProvider>
   );
 }
 

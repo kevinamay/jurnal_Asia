@@ -11,14 +11,16 @@ import {
   Download,
   Eye,
 } from "lucide-react";
-import { RECENT_TRANSACTIONS, Transaction } from "@/lib/mock-data";
+import { Transaction } from "@/lib/mock-data";
 import { formatIDR } from "@/lib/utils";
+import { useAccounting } from "@/context/AccountingContext";
 
 export function RecentTransactionsTable() {
+  const { transactions } = useAccounting();
   const [filterType, setFilterType] = useState<"all" | "income" | "expense" | "pending">("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredTransactions = RECENT_TRANSACTIONS.filter((tx) => {
+  const filteredTransactions = transactions.filter((tx) => {
     const matchesFilter =
       filterType === "all"
         ? true

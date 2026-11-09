@@ -9,6 +9,8 @@ import {
   LucideIcon,
 } from "lucide-react";
 import { METRIC_CARDS } from "@/lib/mock-data";
+import { useAccounting } from "@/context/AccountingContext";
+import { formatIDR } from "@/lib/utils";
 
 const ICON_MAP: Record<string, LucideIcon> = {
   TrendingUp,
@@ -18,9 +20,24 @@ const ICON_MAP: Record<string, LucideIcon> = {
 };
 
 export function MetricCards() {
+  const { revenueMTD, cashInflow, pendingInvoicesAmount, totalExpenses } = useAccounting();
+
+  const dynamicCards = METRIC_CARDS.map((card) => {
+    let liveVal = card.formattedValue;
+    if (card.id === "revenue") liveVal = formatIDR(revenueMTD);
+    if (card.id === "cash-inflow") liveVal = formatIDR(cashInflow);
+    if (card.id === "pending-invoices") liveVal = formatIDR(pendingInvoicesAmount);
+    if (card.id === "expenses") liveVal = formatIDR(totalExpenses);
+
+    return {
+      ...card,
+      formattedValue: liveVal,
+    };
+  });
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {METRIC_CARDS.map((card) => {
+      {dynamicCards.map((card) => {
         const Icon = ICON_MAP[card.iconName] || TrendingUp;
 
         return (

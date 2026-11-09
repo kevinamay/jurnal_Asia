@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { CHART_OF_ACCOUNTS } from "@/lib/mock-data";
 import { formatIDR } from "@/lib/utils";
+import { useAccounting } from "@/context/AccountingContext";
 
 export interface JournalLineItem {
   accountId: string;
@@ -40,6 +41,7 @@ const DEFAULT_ROWS: JournalLineItem[] = [
 ];
 
 export function JournalEntryForm() {
+  const { addJournalEntry } = useAccounting();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState<string | null>(null);
 
@@ -111,8 +113,16 @@ export function JournalEntryForm() {
     }
 
     setIsSubmitting(true);
-    // Simulate API persistence
-    await new Promise((res) => setTimeout(res, 800));
+    // Add to shared accounting context & localStorage
+    addJournalEntry({
+      referenceNumber: data.referenceNumber,
+      transactionDate: data.transactionDate,
+      journalType: data.journalType,
+      generalDescription: data.generalDescription,
+      lines: data.lines,
+    });
+
+    await new Promise((res) => setTimeout(res, 600));
     setIsSubmitting(false);
 
     setSaveSuccess(
