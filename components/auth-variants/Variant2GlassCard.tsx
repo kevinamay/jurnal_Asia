@@ -200,7 +200,7 @@ export function Variant2GlassCard() {
                 <CheckCircle2 className="w-8 h-8 text-emerald-600 mx-auto mb-2" />
                 <h4 className="font-bold text-sm text-emerald-900">Akun Berhasil Diaktifkan!</h4>
                 <p className="text-xs text-emerald-700 mt-1">Anda sekarang dapat masuk ke Dashboard Finansial.</p>
-                <Link href="/" className="inline-block mt-3 px-4 py-2 bg-sky-500 text-white font-bold text-xs rounded-xl">
+                <Link href="/dashboard" className="inline-block mt-3 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs rounded-xl shadow-sm transition-all">
                   Buka Dashboard
                 </Link>
               </div>

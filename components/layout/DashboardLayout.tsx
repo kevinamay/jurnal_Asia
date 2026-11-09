@@ -13,6 +13,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname();
 
   const isAuthRoute =
+    pathname === "/" ||
     pathname.startsWith("/auth") ||
     pathname.startsWith("/login") ||
     pathname.startsWith("/register");

@@ -24,7 +24,7 @@ const NAV_ITEMS = [
     items: [
       {
         label: "Dashboard",
-        href: "/",
+        href: "/dashboard",
         icon: LayoutDashboard,
         badge: null,
       },
@@ -72,7 +72,7 @@ const NAV_ITEMS = [
         label: "Login, Daftar & OTP",
         href: "/auth",
         icon: KeyRound,
-        badge: "8 Desain",
+        badge: "2FA",
       },
     ],
   },
@@ -86,7 +86,7 @@ export function Sidebar() {
       {/* Brand & Company Switcher */}
       <div className="p-4 border-b border-slate-100">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center mb-3 hover:opacity-90 transition-opacity">
+        <Link href="/dashboard" className="flex items-center mb-3 hover:opacity-90 transition-opacity">
           <Image
             src="/logos/logo.webp"
             alt="Logo"
