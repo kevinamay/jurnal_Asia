@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   HelpCircle,
   Settings,
+  KeyRound,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -61,6 +62,17 @@ const NAV_ITEMS = [
         href: "/reports",
         icon: BarChart3,
         badge: null,
+      },
+    ],
+  },
+  {
+    group: "AKSES & KEAMANAN",
+    items: [
+      {
+        label: "Login, Daftar & OTP",
+        href: "/auth",
+        icon: KeyRound,
+        badge: "8 Desain",
       },
     ],
   },

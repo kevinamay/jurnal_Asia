@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { AccountingProvider } from "@/context/AccountingContext";
@@ -9,6 +10,23 @@ interface DashboardLayoutProps {
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
+  const pathname = usePathname();
+
+  const isAuthRoute =
+    pathname.startsWith("/auth") ||
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/register");
+
+  if (isAuthRoute) {
+    return (
+      <AccountingProvider>
+        <div className="min-h-screen font-sans text-slate-900 antialiased">
+          {children}
+        </div>
+      </AccountingProvider>
+    );
+  }
+
   return (
     <AccountingProvider>
       <div className="flex min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
