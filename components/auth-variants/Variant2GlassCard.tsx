@@ -430,7 +430,7 @@ export function Variant2GlassCard() {
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-amber-900 text-[11px] flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                    Gateway WhatsApp Belum Terhubung
+                    {channel === "wa" ? "Gateway WhatsApp Belum Terhubung" : "Layanan Email Belum Terhubung"}
                   </span>
                   <button
                     type="button"
@@ -442,7 +442,9 @@ export function Variant2GlassCard() {
                   </button>
                 </div>
                 <p className="text-[11px] text-amber-800 leading-relaxed">
-                  Pesan otomatis ke WhatsApp HP memerlukan API Gateway (Fonnte/Wablas). Untuk pengujian real-time tanpa setup, Anda bisa klik tombol kirim langsung di bawah atau isi kode simulasi di atas.
+                  {channel === "wa"
+                    ? "Pesan otomatis ke WhatsApp HP memerlukan API Gateway (Fonnte/Wablas). Untuk pengujian real-time tanpa setup, Anda bisa klik tombol kirim langsung di bawah atau isi kode simulasi di atas."
+                    : "Pengiriman otomatis ke inbox email staf memerlukan pengaturan Gmail SMTP (App Password) atau Resend API Key di file .env.local. Gunakan kode simulasi di atas untuk langsung menguji verifikasi."}
                 </p>
                 {channel === "wa" && (
                   <a

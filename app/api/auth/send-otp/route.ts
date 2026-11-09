@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { saveOtp } from "@/lib/otp-store";
+import nodemailer from "nodemailer";
 
 export async function POST(request: Request) {
   try {
@@ -100,8 +101,71 @@ export async function POST(request: Request) {
 
     // 2. Channel Email
     if (channel === "email") {
-      const resendApiKey = process.env.RESEND_API_KEY;
+      const emailHtml = `
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 520px; margin: auto; padding: 32px 24px; border: 1px solid #e2e8f0; border-radius: 20px; background-color: #ffffff;">
+          <div style="text-align: center; margin-bottom: 24px;">
+            <h2 style="color: #0284c7; margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px;">CV. ASIA PLASTIK</h2>
+            <p style="color: #64748b; font-size: 11px; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px;">Sistem Akuntansi & Manajemen Keuangan Internal</p>
+          </div>
+          
+          <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 18px; margin-bottom: 20px;">
+            <p style="color: #334155; font-size: 13px; margin: 0 0 8px 0;">Halo <strong>${fullName || "Staf"}</strong>,</p>
+            <p style="color: #475569; font-size: 13px; margin: 0; line-height: 1.5;">Berikut adalah 6-digit kode verifikasi dua langkah (2FA) Anda untuk registrasi/login akun Portal Asia Plastik:</p>
+          </div>
 
+          <div style="text-align: center; margin: 28px 0;">
+            <span style="font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #0284c7; background: #f0f9ff; padding: 14px 28px; border-radius: 14px; border: 2px dashed #7dd3fc; display: inline-block; font-family: monospace;">${otpCode}</span>
+          </div>
+
+          <p style="color: #64748b; font-size: 12px; line-height: 1.5; margin-bottom: 20px;">
+            ⚠️ <strong>Penting:</strong> Kode OTP ini hanya berlaku selama <strong>5 menit</strong>. Jangan pernah membagikan kode ini kepada pihak manapun demi keamanan data finansial perusahaan.
+          </p>
+
+          <hr style="border: none; border-top: 1px solid #f1f5f9; margin: 20px 0;" />
+          <p style="color: #94a3b8; font-size: 11px; text-align: center; margin: 0;">
+            Email ini dibuat secara otomatis oleh Server Keamanan CV. Asia Plastik.
+          </p>
+        </div>
+      `;
+
+      // 2A. Kirim via Gmail / SMTP (Nodemailer)
+      const emailUser = process.env.EMAIL_USER || process.env.SMTP_USER;
+      const emailPass = process.env.EMAIL_PASS || process.env.SMTP_PASS;
+      const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
+      const smtpPort = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 465;
+
+      if (emailUser && emailPass) {
+        try {
+          const transporter = nodemailer.createTransport({
+            host: smtpHost,
+            port: smtpPort,
+            secure: smtpPort === 465,
+            auth: {
+              user: emailUser,
+              pass: emailPass,
+            },
+          });
+
+          await transporter.sendMail({
+            from: `"Portal Asia Plastik" <${emailUser}>`,
+            to: target,
+            subject: `Kode Verifikasi OTP: ${otpCode} - Portal Asia Plastik`,
+            html: emailHtml,
+          });
+
+          return NextResponse.json({
+            success: true,
+            simulated: false,
+            channel: "email",
+            message: `Kode OTP berhasil dikirimkan ke Email ${target}`,
+          });
+        } catch (err) {
+          console.error("Gagal mengirim Email via SMTP/Gmail:", err);
+        }
+      }
+
+      // 2B. Kirim via Resend API
+      const resendApiKey = process.env.RESEND_API_KEY;
       if (resendApiKey) {
         try {
           const res = await fetch("https://api.resend.com/emails", {
@@ -114,17 +178,7 @@ export async function POST(request: Request) {
               from: "Portal Asia Plastik <onboarding@resend.dev>",
               to: target,
               subject: `Kode Verifikasi OTP: ${otpCode} - Portal Asia Plastik`,
-              html: `
-                <div style="font-family: sans-serif; max-width: 520px; margin: auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 16px;">
-                  <h2 style="color: #0284c7; margin-bottom: 8px;">CV. ASIA PLASTIK</h2>
-                  <p style="color: #475569; font-size: 14px;">Halo <strong>${fullName || "Staf"}</strong>,</p>
-                  <p style="color: #475569; font-size: 14px;">Berikut adalah 6-digit kode verifikasi dua langkah (2FA) Anda untuk registrasi akun Portal Asia Plastik:</p>
-                  <div style="text-align: center; margin: 24px 0;">
-                    <span style="font-size: 32px; font-weight: bold; letter-spacing: 6px; color: #0f172a; background: #f0f9ff; padding: 12px 24px; border-radius: 12px; border: 1px solid #bae6fd; font-family: monospace;">${otpCode}</span>
-                  </div>
-                  <p style="color: #64748b; font-size: 12px;">Kode ini hanya berlaku selama 5 menit. Jangan pernah membagikan kode OTP ini kepada siapa pun termasuk staf manajemen.</p>
-                </div>
-              `,
+              html: emailHtml,
             }),
           });
 
@@ -147,7 +201,7 @@ export async function POST(request: Request) {
         channel: "email",
         otp: otpCode,
         message:
-          "Layanan Email belum terhubung ke API Key. Masukkan kode simulasi berikut untuk melanjutkan verifikasi.",
+          "Layanan Email belum terhubung ke API Key / SMTP. Masukkan kode simulasi berikut untuk melanjutkan verifikasi.",
       });
     }
 
