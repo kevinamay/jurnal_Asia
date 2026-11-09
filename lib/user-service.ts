@@ -54,9 +54,18 @@ export async function saveUserRegistration(data: {
   localUsersStore.set(cleanEmail, userDoc);
 
   try {
-    // Tulis langsung ke Firestore collection 'users'
-    const userRef = doc(db, "users", cleanEmail);
-    await setDoc(userRef, userDoc, { merge: true });
+    // Tulis ke Firestore dengan timeout guard (3 detik) agar request tidak hang jika Firestore belum diaktifkan
+    const firestoreWrite = async () => {
+      const userRef = doc(db, "users", cleanEmail);
+      await setDoc(userRef, userDoc, { merge: true });
+    };
+
+    const timeoutGuard = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Firestore timeout / database belum aktif")), 3000)
+    );
+
+    await Promise.race([firestoreWrite(), timeoutGuard]);
+
     return {
       success: true,
       id: cleanEmail,
@@ -64,8 +73,7 @@ export async function saveUserRegistration(data: {
       message: "Data staf berhasil disimpan ke database Firebase Firestore (Collection: users).",
     };
   } catch (err) {
-    console.error("Gagal menyimpan ke Firestore:", err);
-    // Jika terjadi kesalahan koneksi/aturan Firestore, tetap aman via in-memory backup
+    console.warn("Firestore belum siap atau sedang offline, data diamankan di memori lokal:", err instanceof Error ? err.message : err);
     return {
       success: true,
       id: cleanEmail,
@@ -80,15 +88,24 @@ export async function saveUserRegistration(data: {
  */
 export async function getRegisteredUsers(): Promise<UserRegistrationData[]> {
   try {
-    const q = query(collection(db, "users"), orderBy("createdAt", "desc"), limit(50));
-    const snapshot = await getDocs(q);
-    const results: UserRegistrationData[] = [];
-    snapshot.forEach((doc) => {
-      results.push(doc.data() as UserRegistrationData);
-    });
-    if (results.length > 0) return results;
+    const fetchFirestore = async () => {
+      const q = query(collection(db, "users"), orderBy("createdAt", "desc"), limit(50));
+      const snapshot = await getDocs(q);
+      const results: UserRegistrationData[] = [];
+      snapshot.forEach((doc) => {
+        results.push(doc.data() as UserRegistrationData);
+      });
+      return results;
+    };
+
+    const timeoutGuard = new Promise<UserRegistrationData[]>((_, reject) =>
+      setTimeout(() => reject(new Error("Firestore read timeout")), 2500)
+    );
+
+    const results = await Promise.race([fetchFirestore(), timeoutGuard]);
+    if (results && results.length > 0) return results;
   } catch (err) {
-    console.error("Gagal membaca dari Firestore:", err);
+    console.warn("Firestore belum siap untuk query, membaca data lokal:", err instanceof Error ? err.message : err);
   }
 
   // Fallback membaca dari in-memory store
