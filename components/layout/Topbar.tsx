@@ -17,11 +17,11 @@ import { useState } from "react";
 
 const TITLE_MAP: Record<string, { title: string; subtitle: string }> = {
   "/": {
-    title: "Ikhtisar Keuangan",
+    title: "Dashboard Keuangan",
     subtitle: "Ringkasan metrik kinerja finansial, arus kas, dan aktivitas terkini",
   },
   "/dashboard": {
-    title: "Ikhtisar Keuangan",
+    title: "Dashboard Keuangan",
     subtitle: "Ringkasan metrik kinerja finansial, arus kas, dan aktivitas terkini",
   },
   "/journal/new": {
