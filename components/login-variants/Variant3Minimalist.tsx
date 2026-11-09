@@ -37,10 +37,10 @@ export function Variant3Minimalist() {
           />
           <div>
             <h1 className="text-xl font-bold tracking-tight text-slate-900">
-              Masuk ke KledoFlow
+              Masuk ke Portal Asia Plastik
             </h1>
             <p className="text-xs text-slate-500 mt-0.5">
-              Sistem Akuntansi Internal CV. Asia Plastik
+              Sistem Akuntansi & Manajemen Keuangan Internal
             </p>
           </div>
         </div>

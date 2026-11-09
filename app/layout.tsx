@@ -10,9 +10,9 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "KledoFlow Financials | Internal Accounting & Cashflow Dashboard",
+  title: "Portal Asia Plastik | Sistem Akuntansi & Manajemen Keuangan Internal",
   description:
-    "Internal accounting and financial management system for recording general journal entries, tracking cash flow, and general ledger reconciliation.",
+    "Sistem akuntansi dan manajemen keuangan internal CV. Asia Plastik untuk pencatatan jurnal umum, monitoring kas, dan rekonsiliasi buku besar.",
 };
 
 export default function RootLayout({
