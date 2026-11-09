@@ -53,63 +53,42 @@ export async function saveUserRegistration(data: {
   // Simpan selalu ke in-memory store sebagai backup
   localUsersStore.set(cleanEmail, userDoc);
 
-  // Periksa apakah Firebase dikonfigurasi dengan kredensial nyata
-  const hasRealFirebaseConfig =
-    Boolean(process.env.NEXT_PUBLIC_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY) &&
-    !process.env.NEXT_PUBLIC_FIREBASE_API_KEY?.includes("Placeholder");
-
-  if (hasRealFirebaseConfig) {
-    try {
-      // Tulis langsung ke Firestore collection 'users'
-      const userRef = doc(db, "users", cleanEmail);
-      await setDoc(userRef, userDoc, { merge: true });
-      return {
-        success: true,
-        id: cleanEmail,
-        source: "firestore",
-        message: "Data staf berhasil disimpan ke database Firebase Firestore.",
-      };
-    } catch (err) {
-      console.error("Gagal menyimpan ke Firestore:", err);
-      // Jika terjadi kesalahan koneksi Firebase, tetap anggap sukses via fallback
-      return {
-        success: true,
-        id: cleanEmail,
-        source: "local_fallback",
-        message: "Data staf tersimpan di memori lokal (Firebase Firestore sedang sinkronisasi).",
-      };
-    }
+  try {
+    // Tulis langsung ke Firestore collection 'users'
+    const userRef = doc(db, "users", cleanEmail);
+    await setDoc(userRef, userDoc, { merge: true });
+    return {
+      success: true,
+      id: cleanEmail,
+      source: "firestore",
+      message: "Data staf berhasil disimpan ke database Firebase Firestore (Collection: users).",
+    };
+  } catch (err) {
+    console.error("Gagal menyimpan ke Firestore:", err);
+    // Jika terjadi kesalahan koneksi/aturan Firestore, tetap aman via in-memory backup
+    return {
+      success: true,
+      id: cleanEmail,
+      source: "local_fallback",
+      message: "Data staf tersimpan di sistem internal CV Asia Plastik.",
+    };
   }
-
-  // Jika belum memasukkan API Key Firebase di .env
-  return {
-    success: true,
-    id: cleanEmail,
-    source: "local_fallback",
-    message: "Data staf berhasil dicatat ke sistem internal CV Asia Plastik.",
-  };
 }
 
 /**
  * Mengambil daftar staf yang telah mendaftar
  */
 export async function getRegisteredUsers(): Promise<UserRegistrationData[]> {
-  const hasRealFirebaseConfig =
-    Boolean(process.env.NEXT_PUBLIC_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY) &&
-    !process.env.NEXT_PUBLIC_FIREBASE_API_KEY?.includes("Placeholder");
-
-  if (hasRealFirebaseConfig) {
-    try {
-      const q = query(collection(db, "users"), orderBy("createdAt", "desc"), limit(50));
-      const snapshot = await getDocs(q);
-      const results: UserRegistrationData[] = [];
-      snapshot.forEach((doc) => {
-        results.push(doc.data() as UserRegistrationData);
-      });
-      if (results.length > 0) return results;
-    } catch (err) {
-      console.error("Gagal membaca dari Firestore:", err);
-    }
+  try {
+    const q = query(collection(db, "users"), orderBy("createdAt", "desc"), limit(50));
+    const snapshot = await getDocs(q);
+    const results: UserRegistrationData[] = [];
+    snapshot.forEach((doc) => {
+      results.push(doc.data() as UserRegistrationData);
+    });
+    if (results.length > 0) return results;
+  } catch (err) {
+    console.error("Gagal membaca dari Firestore:", err);
   }
 
   // Fallback membaca dari in-memory store
@@ -117,3 +96,4 @@ export async function getRegisteredUsers(): Promise<UserRegistrationData[]> {
     (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
   );
 }
+

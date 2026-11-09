@@ -5,29 +5,33 @@ const firebaseConfig = {
   apiKey:
     process.env.NEXT_PUBLIC_FIREBASE_API_KEY ||
     process.env.FIREBASE_API_KEY ||
-    "AIzaSyDemoPlaceholderForAsiaPlastik2026",
+    "AIzaSyAxDoelBGJGOCh2mR4PjkoqQxgv9bU_F9M",
   authDomain:
     process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN ||
     process.env.FIREBASE_AUTH_DOMAIN ||
-    "cv-asia-plastik.firebaseapp.com",
+    "jurnalasia.firebaseapp.com",
   projectId:
     process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ||
     process.env.FIREBASE_PROJECT_ID ||
-    "cv-asia-plastik",
+    "jurnalasia",
   storageBucket:
     process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET ||
     process.env.FIREBASE_STORAGE_BUCKET ||
-    "cv-asia-plastik.appspot.com",
+    "jurnalasia.firebasestorage.app",
   messagingSenderId:
     process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ||
     process.env.FIREBASE_MESSAGING_SENDER_ID ||
-    "123456789012",
+    "293373972893",
   appId:
     process.env.NEXT_PUBLIC_FIREBASE_APP_ID ||
     process.env.FIREBASE_APP_ID ||
-    "1:123456789012:web:abcdef123456",
+    "1:293373972893:web:5dc8cb83906ade793d1f74",
+  measurementId:
+    process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID ||
+    "G-1YSQXL5VTG",
 };
 
 // Inisialisasi Firebase App (Singleton)
 export const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 export const db = getFirestore(app);
+
