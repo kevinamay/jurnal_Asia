@@ -136,15 +136,26 @@ export async function POST(request: Request) {
 
       if (emailUser && emailPass) {
         try {
-          const transporter = nodemailer.createTransport({
-            host: smtpHost,
-            port: smtpPort,
-            secure: smtpPort === 465,
-            auth: {
-              user: emailUser,
-              pass: emailPass,
-            },
-          });
+          const isGmail = emailUser.toLowerCase().endsWith("@gmail.com");
+          const transporter = nodemailer.createTransport(
+            isGmail
+              ? {
+                  service: "gmail",
+                  auth: {
+                    user: emailUser,
+                    pass: emailPass.replace(/\s+/g, ""),
+                  },
+                }
+              : {
+                  host: smtpHost,
+                  port: smtpPort,
+                  secure: smtpPort === 465,
+                  auth: {
+                    user: emailUser,
+                    pass: emailPass.replace(/\s+/g, ""),
+                  },
+                }
+          );
 
           await transporter.sendMail({
             from: `"Portal Asia Plastik" <${emailUser}>`,
