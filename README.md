@@ -20,6 +20,10 @@ A modern, robust, and highly functional Internal Financial & Accounting Dashboar
 - **Buku Besar / General Ledger (`/ledger`):**
   - Mutasi akun perkiraan, saldo awal, dan saldo kumulatif per periode.
 
+- **Database & Akses Staf:**
+  - **Firebase Firestore:** Penyimpanan data pendaftaran staf (`users`: `fullName`, `email`, `phone`, `role`, `status`, `createdAt`).
+  - **Verifikasi 2-Faktor (2FA):** Pengiriman kode OTP 6-digit via WhatsApp & Email dengan tanda tangan kriptografis HMAC.
+
 - **Manajemen Operasional Finansial:**
   - Piutang Usaha / Accounts Receivable (`/receivable`).
   - Hutang Usaha / Accounts Payable (`/payable`).

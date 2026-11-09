@@ -165,6 +165,12 @@ export function Variant2GlassCard() {
           target,
           otp: enteredOtp,
           verificationToken,
+          userProfile: {
+            fullName,
+            email,
+            phone,
+            channel,
+          },
         }),
       });
 
@@ -416,9 +422,9 @@ export function Variant2GlassCard() {
             {isSuccess ? (
               <div className="p-5 bg-emerald-50 border border-emerald-200 rounded-2xl text-center space-y-2 animate-in fade-in duration-300">
                 <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" />
-                <h4 className="font-bold text-sm text-emerald-950">Akun Berhasil Diaktifkan!</h4>
+                <h4 className="font-bold text-sm text-emerald-950">Akun Berhasil Diaktifkan & Tersimpan!</h4>
                 <p className="text-xs text-emerald-700">
-                  Verifikasi 2-faktor selesai. Anda sekarang memiliki otorisasi penuh untuk mengakses portal akuntansi.
+                  Verifikasi 2-faktor selesai. Data registrasi nama, email, dan WhatsApp telah tersimpan di database Firebase. Anda sekarang memiliki otorisasi penuh untuk mengakses portal akuntansi.
                 </p>
                 <Link
                   href="/dashboard"
