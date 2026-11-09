@@ -73,7 +73,7 @@ export function PrototypeSwitcher({
         {/* Current Variant Badge & Title */}
         <div className="px-3 py-1 flex items-center gap-2.5 min-w-[240px] justify-center text-center">
           <span className="w-5 h-5 rounded-md bg-sky-500 text-white font-bold flex items-center justify-center text-[11px] shadow-sm">
-            {currentIndex + 1}
+            {current.id}
           </span>
           <div className="text-left">
             <p className="font-bold text-white text-[11px] leading-tight flex items-center gap-1.5">
@@ -107,9 +107,9 @@ export function PrototypeSwitcher({
                   ? "bg-sky-500 text-white shadow-sm ring-2 ring-sky-300/40"
                   : "bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white"
               }`}
-              title={`Pindah ke Desain ${i + 1}: ${v.name}`}
+              title={`Pindah ke ${v.name}`}
             >
-              {i + 1}
+              {v.id}
             </button>
           ))}
         </div>
