@@ -1,6 +1,6 @@
 # Folder Asset Publik (Next.js)
 
-Folder ini digunakan untuk menyimpan seluruh asset statis seperti gambar, logo perusahaan, foto avatar, icon, dan dokumen pendukung proyek **KledoFlow Accounting**.
+Folder ini digunakan untuk menyimpan seluruh asset statis seperti gambar, logo perusahaan, foto avatar, icon, dan dokumen pendukung proyek **CV ASIA PLASTIK - Dashboard Keuangan**.
 
 ## 📁 Struktur Folder
 - `public/images/` : Foto, banner, ilustrasi grafis, atau screenshot.

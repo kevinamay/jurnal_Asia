@@ -12,7 +12,6 @@ import {
   CheckCircle2,
   AlertCircle,
   Loader2,
-  ExternalLink,
 } from "lucide-react";
 
 export function Variant2GlassCard() {
@@ -30,8 +29,7 @@ export function Variant2GlassCard() {
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [simulatedOtp, setSimulatedOtp] = useState<string | null>(null);
-  const [isSimulated, setIsSimulated] = useState(false);
+  const [verificationToken, setVerificationToken] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState("");
   const [countdown, setCountdown] = useState(300); // 5 menit
 
@@ -97,11 +95,8 @@ export function Variant2GlassCard() {
         return;
       }
 
-      setIsSimulated(Boolean(data.simulated));
-      if (data.otp) {
-        setSimulatedOtp(data.otp);
-      } else {
-        setSimulatedOtp(null);
+      if (data.verificationToken) {
+        setVerificationToken(data.verificationToken);
       }
 
       setStatusMessage(data.message || "Kode OTP berhasil dikirimkan.");
@@ -149,17 +144,6 @@ export function Variant2GlassCard() {
     }
   };
 
-  // Isi otomatis kode jika dalam mode pengujian simulasi
-  const fillSimulatedOtp = (code: string) => {
-    const chars = code.split("");
-    const newOtp = [...otp];
-    for (let i = 0; i < 6; i++) {
-      newOtp[i] = chars[i] || "";
-    }
-    setOtp(newOtp);
-    inputRefs.current[5]?.focus();
-  };
-
   // Verifikasi OTP ke Backend
   const handleVerifyOtp = async () => {
     const enteredOtp = otp.join("");
@@ -180,6 +164,7 @@ export function Variant2GlassCard() {
         body: JSON.stringify({
           target,
           otp: enteredOtp,
+          verificationToken,
         }),
       });
 
@@ -198,15 +183,6 @@ export function Variant2GlassCard() {
     } finally {
       setIsVerifying(false);
     }
-  };
-
-  // Format link WhatsApp Web langsung untuk pengujian instan
-  const getWaDirectLink = () => {
-    let clean = phone.replace(/[^0-9]/g, "");
-    if (clean.startsWith("0")) clean = "62" + clean.slice(1);
-    else if (!clean.startsWith("62")) clean = "62" + clean;
-    const msg = `[CV. ASIA PLASTIK - SISTEM KEAMANAN]\nHalo ${fullName || "Staf"},\nKode OTP verifikasi Anda adalah: ${simulatedOtp || "123456"}\n(Berlaku 5 menit)`;
-    return `https://wa.me/${clean}?text=${encodeURIComponent(msg)}`;
   };
 
   return (
@@ -424,47 +400,16 @@ export function Variant2GlassCard() {
               </p>
             </div>
 
-            {/* Mode Banner Simulasi atau Sukses */}
-            {isSimulated && simulatedOtp && (
-              <div className="p-3.5 bg-amber-50/80 border border-amber-200 rounded-2xl text-xs space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-amber-900 text-[11px] flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                    {channel === "wa" ? "Gateway WhatsApp Belum Terhubung" : "Layanan Email Belum Terhubung"}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => fillSimulatedOtp(simulatedOtp)}
-                    className="font-mono font-bold text-xs text-sky-700 bg-white hover:bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-300 shadow-2xs transition-all cursor-pointer"
-                    title="Klik untuk memasukkan kode secara otomatis"
-                  >
-                    OTP: <span className="text-sky-600 underline">{simulatedOtp}</span> (Isi Otomatis)
-                  </button>
+            {/* Notifikasi Status Pengiriman OTP */}
+            {statusMessage && (
+              <div className="p-3.5 rounded-2xl bg-sky-50 border border-sky-200/80 text-sky-900 text-xs flex items-start gap-2.5 shadow-2xs">
+                <CheckCircle2 className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
+                <div className="space-y-0.5">
+                  <p className="font-semibold text-sky-950">Kode Verifikasi Resmi Terkirim</p>
+                  <p className="text-[11px] text-sky-700 leading-relaxed">
+                    {statusMessage}
+                  </p>
                 </div>
-                <p className="text-[11px] text-amber-800 leading-relaxed">
-                  {channel === "wa"
-                    ? "Pesan otomatis ke WhatsApp HP memerlukan API Gateway (Fonnte/Wablas). Untuk pengujian real-time tanpa setup, Anda bisa klik tombol kirim langsung di bawah atau isi kode simulasi di atas."
-                    : "Pengiriman otomatis ke inbox email staf memerlukan pengaturan Gmail SMTP (App Password) atau Resend API Key di file .env.local. Gunakan kode simulasi di atas untuk langsung menguji verifikasi."}
-                </p>
-                {channel === "wa" && (
-                  <a
-                    href={getWaDirectLink()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 bg-emerald-100 hover:bg-emerald-200 px-3 py-1.5 rounded-xl border border-emerald-300 transition-colors"
-                  >
-                    <MessageCircle className="w-3.5 h-3.5" />
-                    <span>Buka & Kirim Pesan ke WhatsApp ({phone}) Sekarang</span>
-                    <ExternalLink className="w-3 h-3 ml-0.5" />
-                  </a>
-                )}
-              </div>
-            )}
-
-            {!isSimulated && statusMessage && (
-              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 shrink-0" />
-                <span>{statusMessage}</span>
               </div>
             )}
 

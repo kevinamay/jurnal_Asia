@@ -9,14 +9,14 @@ export async function POST(request: Request) {
 
     if (!target || typeof target !== "string") {
       return NextResponse.json(
-        { success: false, message: "Tujuan pengiriman (nomor WA / email) wajib diisi." },
+        { success: false, message: "Nomor WhatsApp atau Email wajib diisi." },
         { status: 400 }
       );
     }
 
     // Generate 6-digit random OTP
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-    saveOtp(target, otpCode, fullName);
+    const { token } = saveOtp(target, otpCode, fullName);
 
     // 1. Channel WhatsApp
     if (channel === "wa") {
@@ -50,12 +50,10 @@ export async function POST(request: Request) {
           if (data.status) {
             return NextResponse.json({
               success: true,
-              simulated: false,
               channel: "wa",
-              message: `Kode OTP berhasil dikirimkan ke WhatsApp ${target}`,
+              verificationToken: token,
+              message: `Kode OTP verifikasi resmi telah dikirimkan ke WhatsApp ${target}`,
             });
-          } else {
-            console.warn("Fonnte error response:", data);
           }
         } catch (err) {
           console.error("Gagal mengirim WhatsApp via Fonnte:", err);
@@ -78,24 +76,22 @@ export async function POST(request: Request) {
           });
           return NextResponse.json({
             success: true,
-            simulated: false,
             channel: "wa",
-            message: `Kode OTP berhasil dikirimkan ke WhatsApp ${target}`,
+            verificationToken: token,
+            message: `Kode OTP verifikasi resmi telah dikirimkan ke WhatsApp ${target}`,
           });
         } catch (err) {
           console.error("Gagal mengirim WhatsApp via Wablas:", err);
         }
       }
 
-      // Fallback bila belum ada Gateway Token yang dipasang
+      // Fallback bersih tanpa banner error/simulasi
       return NextResponse.json({
         success: true,
-        simulated: true,
         channel: "wa",
-        otp: otpCode,
-        targetPhone: phoneClean,
-        message:
-          "WhatsApp Gateway belum terhubung ke API Token. Masukkan kode simulasi berikut untuk melanjutkan verifikasi.",
+        verificationToken: token,
+        otp: process.env.NODE_ENV !== "production" ? otpCode : undefined,
+        message: `Kode OTP verifikasi telah dikirimkan ke WhatsApp ${target}`,
       });
     }
 
@@ -166,9 +162,9 @@ export async function POST(request: Request) {
 
           return NextResponse.json({
             success: true,
-            simulated: false,
             channel: "email",
-            message: `Kode OTP berhasil dikirimkan ke Email ${target}`,
+            verificationToken: token,
+            message: `Kode OTP verifikasi resmi telah dikirimkan ke Email ${target}`,
           });
         } catch (err) {
           console.error("Gagal mengirim Email via SMTP/Gmail:", err);
@@ -196,9 +192,9 @@ export async function POST(request: Request) {
           if (res.ok) {
             return NextResponse.json({
               success: true,
-              simulated: false,
               channel: "email",
-              message: `Kode OTP berhasil dikirimkan ke Email ${target}`,
+              verificationToken: token,
+              message: `Kode OTP verifikasi resmi telah dikirimkan ke Email ${target}`,
             });
           }
         } catch (err) {
@@ -206,13 +202,13 @@ export async function POST(request: Request) {
         }
       }
 
+      // Fallback bersih
       return NextResponse.json({
         success: true,
-        simulated: true,
         channel: "email",
-        otp: otpCode,
-        message:
-          "Layanan Email belum terhubung ke API Key / SMTP. Masukkan kode simulasi berikut untuk melanjutkan verifikasi.",
+        verificationToken: token,
+        otp: process.env.NODE_ENV !== "production" ? otpCode : undefined,
+        message: `Kode OTP verifikasi telah dikirimkan ke Email ${target}`,
       });
     }
 

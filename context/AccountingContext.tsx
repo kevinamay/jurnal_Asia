@@ -35,7 +35,7 @@ interface AccountingContextType {
 
 const AccountingContext = createContext<AccountingContextType | undefined>(undefined);
 
-const STORAGE_KEY = "kledoflow_transactions_v1";
+const STORAGE_KEY = "asia_plastik_transactions_v1";
 
 export function AccountingProvider({ children }: { children: React.ReactNode }) {
   const [transactions, setTransactions] = useState<Transaction[]>(RECENT_TRANSACTIONS);

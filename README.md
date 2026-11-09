@@ -1,4 +1,4 @@
-# Jurnal Asia (KledoFlow Financials)
+# Jurnal Asia (CV ASIA PLASTIK - Dashboard Keuangan)
 
 A modern, robust, and highly functional Internal Financial & Accounting Dashboard built with **Next.js 14 (App Router)**, **Tailwind CSS**, **Lucide React**, **Recharts**, and **React Hook Form**. Inspired by enterprise accounting software like Jurnal.id, focused on rapid data entry and clear financial visibility.
 

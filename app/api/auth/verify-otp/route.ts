@@ -4,7 +4,7 @@ import { verifyOtp } from "@/lib/otp-store";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { target, otp } = body;
+    const { target, otp, verificationToken } = body;
 
     if (!target || !otp) {
       return NextResponse.json(
@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = verifyOtp(target, otp);
+    const result = verifyOtp(target, otp, verificationToken);
 
     if (!result.valid) {
       return NextResponse.json(
