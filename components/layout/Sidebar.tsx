@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -9,7 +10,6 @@ import {
   ArrowDownLeft,
   ArrowUpRight,
   BarChart3,
-  Building2,
   ChevronDown,
   ShieldCheck,
   HelpCircle,
@@ -73,22 +73,17 @@ export function Sidebar() {
     <aside className="w-64 bg-white border-r border-slate-200/90 flex flex-col shrink-0 h-screen sticky top-0 z-40 select-none">
       {/* Brand & Company Switcher */}
       <div className="p-4 border-b border-slate-100">
-        <div className="flex items-center gap-2.5 mb-3">
-          <div className="w-9 h-9 rounded-lg bg-sky-500 flex items-center justify-center text-white font-bold shadow-sm shadow-sky-500/20">
-            <Building2 className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-bold text-slate-900 tracking-tight text-base">
-                Kledo<span className="text-sky-500">Flow</span>
-              </span>
-              <span className="text-[10px] font-semibold bg-sky-50 text-sky-600 px-1.5 py-0.5 rounded border border-sky-200">
-                ERP
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-500 leading-tight">Financial & Accounting</p>
-          </div>
-        </div>
+        {/* Brand Logo */}
+        <Link href="/" className="flex items-center mb-3 hover:opacity-90 transition-opacity">
+          <Image
+            src="/logos/logo.webp"
+            alt="Logo"
+            width={271}
+            height={92}
+            className="h-9 w-auto max-w-[200px] object-contain"
+            priority
+          />
+        </Link>
 
         {/* Active Company Card */}
         <div className="bg-slate-50 hover:bg-slate-100/80 transition-colors border border-slate-200/80 rounded-lg p-2 flex items-center justify-between cursor-pointer">
