@@ -114,11 +114,18 @@ export function Variant2GlassCard() {
 
             <button
               onClick={() => setStep(2)}
-              className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs rounded-xl shadow-sm shadow-sky-500/30 transition-all flex items-center justify-center gap-2 mt-4"
+              className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs rounded-xl shadow-sm shadow-sky-500/30 transition-all flex items-center justify-center gap-2 mt-4 cursor-pointer"
             >
               <span>Lanjut: Pilih Metode Pengiriman OTP</span>
               <ArrowRight className="w-4 h-4" />
             </button>
+
+            <div className="pt-4 border-t border-slate-100 text-center text-[11px] text-slate-500">
+              <span>Sudah memiliki akun terdaftar? </span>
+              <Link href="/login" className="font-bold text-sky-600 hover:text-sky-700 hover:underline">
+                Masuk di sini
+              </Link>
+            </div>
           </div>
         )}
 

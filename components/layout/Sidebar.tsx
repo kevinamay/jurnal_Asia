@@ -69,10 +69,16 @@ const NAV_ITEMS = [
     group: "AKSES & KEAMANAN",
     items: [
       {
-        label: "Login Staf (8 Desain)",
-        href: "/auth",
+        label: "Halaman Login",
+        href: "/login",
         icon: KeyRound,
-        badge: "8 Opsi",
+        badge: null,
+      },
+      {
+        label: "Registrasi Staf (2FA)",
+        href: "/register",
+        icon: KeyRound,
+        badge: "2FA",
       },
     ],
   },

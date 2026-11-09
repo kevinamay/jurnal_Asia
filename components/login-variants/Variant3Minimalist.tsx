@@ -22,7 +22,7 @@ export function Variant3Minimalist() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 flex flex-col items-center justify-center p-6 font-sans text-slate-900 pb-24">
+    <div className="min-h-screen w-full bg-slate-50 flex flex-col items-center justify-center p-6 font-sans text-slate-900 py-12">
       {/* Centered Minimalist Shell */}
       <div className="w-full max-w-sm space-y-8">
         {/* Top Minimal Brand */}
@@ -132,3 +132,4 @@ export function Variant3Minimalist() {
     </div>
   );
 }
+
