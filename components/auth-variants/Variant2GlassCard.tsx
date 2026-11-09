@@ -47,8 +47,8 @@ export function Variant2GlassCard() {
         {/* Step Indicator Header */}
         <div className="mb-6 pb-4 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider bg-sky-50 text-sky-700 px-2 py-0.5 rounded-full border border-sky-200">
-              Desain 2: Glassmorphism Stepper
+            <span className="text-[10px] font-bold uppercase tracking-wider bg-sky-50 text-sky-700 px-2.5 py-0.5 rounded-full border border-sky-200">
+              Verifikasi 2FA // Keamanan Akun
             </span>
           </div>
           {/* Step Pill */}
