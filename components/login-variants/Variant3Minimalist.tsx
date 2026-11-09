@@ -9,8 +9,8 @@ import { Mail, Lock, Eye, EyeOff, ArrowRight, HelpCircle } from "lucide-react";
 export function Variant3Minimalist() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("sarah.jenkins@asiaplastik.com");
-  const [password, setPassword] = useState("••••••••••••");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -81,6 +81,7 @@ export function Variant3Minimalist() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Masukkan kata sandi"
                   className="w-full pl-9 pr-9 py-2.5 bg-slate-50/70 border border-slate-200 rounded-xl focus:bg-white focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 outline-none transition-all font-mono"
                   required
                 />

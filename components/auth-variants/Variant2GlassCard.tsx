@@ -21,6 +21,10 @@ export function Variant2GlassCard() {
   const [step, setStep] = useState<1 | 2 | 3>(1); // 1: Register, 2: Channel, 3: OTP
   const [channel, setChannel] = useState<"wa" | "email">("wa");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
 
   return (
     <div className="min-h-screen w-full bg-radial-gradient from-sky-100/60 via-slate-50 to-white flex flex-col items-center justify-center p-4 relative overflow-hidden font-sans">
@@ -78,8 +82,9 @@ export function Variant2GlassCard() {
                   <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
-                    defaultValue="Rian Kusuma"
-                    placeholder="Nama lengkap"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    placeholder="Masukkan nama lengkap staf"
                     className="w-full pl-9 pr-3 py-2.5 bg-white/70 border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none"
                   />
                 </div>
@@ -91,8 +96,9 @@ export function Variant2GlassCard() {
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="email"
-                    defaultValue="rian@asiaplastik.com"
-                    placeholder="email@asiaplastik.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="nama@asiaplastik.com"
                     className="w-full pl-9 pr-3 py-2.5 bg-white/70 border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none"
                   />
                 </div>
@@ -104,8 +110,9 @@ export function Variant2GlassCard() {
                   <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="tel"
-                    defaultValue="081398765432"
-                    placeholder="0813xxxxxxxx"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    placeholder="Contoh: 081234567890"
                     className="w-full pl-9 pr-3 py-2.5 bg-white/70 border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none"
                   />
                 </div>
@@ -153,7 +160,9 @@ export function Variant2GlassCard() {
                   <MessageCircle className="w-5 h-5" />
                 </div>
                 <h4 className="font-bold text-xs text-slate-900">WhatsApp</h4>
-                <p className="text-[10px] text-slate-500 mt-0.5">Kirim instan ke nomor WA 081398765432</p>
+                <p className="text-[10px] text-slate-500 mt-0.5">
+                  {phone ? `Kirim instan ke ${phone}` : "Kirim instan ke nomor WhatsApp terdaftar"}
+                </p>
               </button>
 
               <button
@@ -169,7 +178,9 @@ export function Variant2GlassCard() {
                   <Mail className="w-5 h-5" />
                 </div>
                 <h4 className="font-bold text-xs text-slate-900">Email Kantor</h4>
-                <p className="text-[10px] text-slate-500 mt-0.5">Kirim ke rian@asiaplastik.com</p>
+                <p className="text-[10px] text-slate-500 mt-0.5">
+                  {email ? `Kirim ke ${email}` : "Kirim ke email kantor staf terdaftar"}
+                </p>
               </button>
             </div>
 
@@ -198,7 +209,11 @@ export function Variant2GlassCard() {
               <h2 className="text-xl font-bold text-slate-900">Verifikasi Kode OTP</h2>
               <p className="text-xs text-slate-500 mt-0.5">
                 Masukkan 6 angka yang dikirimkan ke{" "}
-                <strong>{channel === "wa" ? "WhatsApp (081398765432)" : "Email (rian@asiaplastik.com)"}</strong>
+                <strong>
+                  {channel === "wa"
+                    ? `WhatsApp (${phone || "Nomor terdaftar"})`
+                    : `Email (${email || "Email kantor terdaftar"})`}
+                </strong>
               </p>
             </div>
 
@@ -219,7 +234,12 @@ export function Variant2GlassCard() {
                       key={i}
                       type="text"
                       maxLength={1}
-                      defaultValue={i === 0 ? "7" : i === 1 ? "4" : ""}
+                      value={otp[i]}
+                      onChange={(e) => {
+                        const nextOtp = [...otp];
+                        nextOtp[i] = e.target.value;
+                        setOtp(nextOtp);
+                      }}
                       className="w-11 h-12 text-center text-lg font-bold font-mono bg-white border border-slate-200 rounded-xl focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 outline-none shadow-xs"
                     />
                   ))}
