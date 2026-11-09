@@ -88,7 +88,7 @@ export function Sidebar() {
         {/* Active Company Card */}
         <div className="bg-slate-50 hover:bg-slate-100/80 transition-colors border border-slate-200/80 rounded-lg p-2 flex items-center justify-between cursor-pointer">
           <div className="truncate">
-            <p className="text-xs font-semibold text-slate-800 truncate">PT Sukses Makmur Abadi</p>
+            <p className="text-xs font-semibold text-slate-800 truncate">CV ASIA PLASTIK</p>
             <p className="text-[10px] text-slate-500 flex items-center gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
               IDR • Head Office

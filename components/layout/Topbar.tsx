@@ -53,7 +53,7 @@ export function Topbar() {
   const currentRouteInfo =
     TITLE_MAP[pathname] || {
       title: "Sistem Akuntansi Internal",
-      subtitle: "PT Sukses Makmur Abadi • Dashboard Keuangan",
+      subtitle: "CV ASIA PLASTIK • Dashboard Keuangan",
     };
 
   const currentDateFormatted = new Intl.DateTimeFormat("id-ID", {
