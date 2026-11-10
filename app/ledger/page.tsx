@@ -43,19 +43,19 @@ export default function LedgerPage() {
   }).format(new Date());
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Account Selector and Period Filter */}
-      <div className="bg-white rounded-xl p-5 border border-slate-200/90 shadow-soft">
+      <div className="bg-white rounded-xl p-4 sm:p-5 border border-slate-200/90 shadow-soft">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-            <div>
+            <div className="w-full sm:w-auto">
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
                 Pilih Akun Perkiraan (COA)
               </label>
               <select
                 value={selectedAccount}
                 onChange={(e) => setSelectedAccount(e.target.value)}
-                className="px-3 py-1.5 text-xs font-semibold bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 min-w-[280px]"
+                className="w-full sm:w-auto min-w-0 sm:min-w-[280px] px-3 py-1.5 text-xs font-semibold bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
               >
                 {CHART_OF_ACCOUNTS.map((acc) => (
                   <option key={acc.code} value={acc.code}>
@@ -69,7 +69,7 @@ export default function LedgerPage() {
               <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
                 Periode Mutasi
               </label>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <input
                   type="date"
                   defaultValue="2026-11-01"
@@ -85,7 +85,7 @@ export default function LedgerPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 self-end lg:self-center">
+          <div className="flex flex-wrap items-center gap-2 self-start sm:self-end lg:self-center">
             <button
               title="Cetak Laporan Buku Besar"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
@@ -109,8 +109,8 @@ export default function LedgerPage() {
           </div>
         </div>
 
-        {/* Selected Account Summary Card */}
-        <div className="mt-5 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+        {/* Selected Account Summary Card (Responsive Grid: 1 col on mobile, 2 col on tablet, 4 col on desktop) */}
+        <div className="mt-5 pt-4 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
           <div className="bg-slate-50 p-3 rounded-lg border border-slate-200/80">
             <span className="text-slate-500 text-[11px] block">Kode & Nama Akun</span>
             <span className="font-bold text-slate-900 text-sm">{accountInfo.code}</span>
@@ -142,10 +142,10 @@ export default function LedgerPage() {
         </div>
       </div>
 
-      {/* Ledger Table */}
+      {/* Ledger Table with Horizontal Scroll for Mobile */}
       <div className="bg-white rounded-xl border border-slate-200/90 shadow-soft overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+          <table className="w-full text-left text-xs min-w-[650px]">
             <thead className="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200 text-[11px]">
               <tr>
                 <th className="py-3 px-4">Tanggal</th>
@@ -179,7 +179,7 @@ export default function LedgerPage() {
               ) : (
                 <tr>
                   <td colSpan={6} className="py-16 text-center text-slate-500 bg-slate-50/30">
-                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto space-y-3">
+                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto space-y-3 px-4">
                       <div className="w-12 h-12 rounded-full bg-sky-50 flex items-center justify-center text-sky-500 border border-sky-100">
                         <FileSpreadsheet className="w-6 h-6" />
                       </div>

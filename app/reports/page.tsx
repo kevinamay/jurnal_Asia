@@ -57,17 +57,17 @@ export default function ReportsPage() {
   const netIncome = grossProfit - totalExpenses;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header Context */}
-      <div className="bg-white rounded-xl p-5 border border-slate-200/90 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white rounded-xl p-4 sm:p-5 border border-slate-200/90 shadow-soft flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h2 className="text-base font-bold text-slate-900">Pusat Laporan Finansial Standar PSAK</h2>
+          <h2 className="text-sm sm:text-base font-bold text-slate-900">Pusat Laporan Finansial Standar PSAK</h2>
           <p className="text-xs text-slate-500 mt-0.5">
             Laporan keuangan komprehensif siap cetak dan ekspor untuk kebutuhan manajemen dan pajak
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
             <Calendar className="w-3.5 h-3.5 text-slate-400" />
             <span>Periode: Nov 2026</span>
@@ -80,17 +80,17 @@ export default function ReportsPage() {
       </div>
 
       {/* Report Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
         {REPORT_CARDS.map((report) => {
           const Icon = report.icon;
           return (
             <div
               key={report.id}
-              className="bg-white rounded-xl p-5 border border-slate-200/90 shadow-soft hover:shadow-elevation hover:border-sky-300 transition-all cursor-pointer group"
+              className="bg-white rounded-xl p-4 sm:p-5 border border-slate-200/90 shadow-soft hover:shadow-elevation hover:border-sky-300 transition-all cursor-pointer group"
             >
               <div className="flex items-start justify-between mb-3">
-                <div className="w-10 h-10 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center border border-sky-100 group-hover:bg-sky-500 group-hover:text-white transition-colors">
-                  <Icon className="w-5 h-5" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center border border-sky-100 group-hover:bg-sky-500 group-hover:text-white transition-colors">
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
                   {report.badge}
@@ -116,7 +116,7 @@ export default function ReportsPage() {
       </div>
 
       {/* Snapshot Preview: Laba Rugi Berjalan */}
-      <div className="bg-white rounded-xl p-5 border border-slate-200/90 shadow-soft">
+      <div className="bg-white rounded-xl p-4 sm:p-5 border border-slate-200/90 shadow-soft">
         <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
           <div>
             <h3 className="text-sm font-bold text-slate-900">
@@ -134,26 +134,26 @@ export default function ReportsPage() {
           </div>
         </div>
 
-        <div className="space-y-2 text-xs font-sans">
-          <div className="flex items-center justify-between py-1.5 px-2 bg-slate-50 rounded font-semibold text-slate-800">
+        <div className="space-y-2 text-xs font-sans overflow-x-auto">
+          <div className="flex items-center justify-between py-1.5 px-2 bg-slate-50 rounded font-semibold text-slate-800 min-w-[320px]">
             <span>Total Pendapatan Usaha (Revenue)</span>
             <span className="font-mono text-emerald-600 font-bold">{formatIDR(revenueMTD)}</span>
           </div>
-          <div className="flex items-center justify-between py-1.5 px-2 text-slate-600">
+          <div className="flex items-center justify-between py-1.5 px-2 text-slate-600 min-w-[320px]">
             <span className="pl-4">Beban Pokok Penjualan (HPP)</span>
             <span className="font-mono font-semibold">({formatIDR(hpp)})</span>
           </div>
-          <div className="flex items-center justify-between py-1.5 px-2 border-t border-slate-200 font-bold text-slate-900">
+          <div className="flex items-center justify-between py-1.5 px-2 border-t border-slate-200 font-bold text-slate-900 min-w-[320px]">
             <span>LABA KOTOR (GROSS PROFIT)</span>
             <span className="font-mono text-sky-600">{formatIDR(grossProfit)}</span>
           </div>
-          <div className="flex items-center justify-between py-1.5 px-2 text-slate-600">
+          <div className="flex items-center justify-between py-1.5 px-2 text-slate-600 min-w-[320px]">
             <span className="pl-4">Total Beban Operasional & Gaji</span>
             <span className="font-mono font-semibold">({formatIDR(totalExpenses)})</span>
           </div>
-          <div className="flex items-center justify-between py-2 px-2 bg-sky-50 border border-sky-200 rounded font-bold text-slate-900 text-sm">
-            <span className="text-sky-950 font-extrabold">LABA BERSIH BERJALAN (NET INCOME)</span>
-            <span className="font-mono text-emerald-600 font-extrabold text-base">
+          <div className="flex items-center justify-between py-2 px-2 bg-sky-50 border border-sky-200 rounded font-bold text-slate-900 text-sm min-w-[320px]">
+            <span className="text-sky-950 font-extrabold text-xs sm:text-sm">LABA BERSIH BERJALAN (NET INCOME)</span>
+            <span className="font-mono text-emerald-600 font-extrabold text-sm sm:text-base">
               {formatIDR(netIncome)}
             </span>
           </div>

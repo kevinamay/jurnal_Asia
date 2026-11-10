@@ -55,12 +55,12 @@ export function RecentTransactionsTable() {
         </div>
 
         {/* Filter controls & Search */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           {/* Filter Pills */}
-          <div className="inline-flex rounded-lg bg-slate-100 p-0.5 text-xs font-medium text-slate-600">
+          <div className="inline-flex rounded-lg bg-slate-100 p-0.5 text-xs font-medium text-slate-600 overflow-x-auto max-w-full">
             <button
               onClick={() => setFilterType("all")}
-              className={`px-2.5 py-1 rounded-md transition-all ${
+              className={`px-2.5 py-1 rounded-md transition-all shrink-0 ${
                 filterType === "all" ? "bg-white text-slate-900 font-bold shadow-xs" : ""
               }`}
             >
@@ -68,7 +68,7 @@ export function RecentTransactionsTable() {
             </button>
             <button
               onClick={() => setFilterType("income")}
-              className={`px-2.5 py-1 rounded-md transition-all ${
+              className={`px-2.5 py-1 rounded-md transition-all shrink-0 ${
                 filterType === "income" ? "bg-white text-emerald-700 font-bold shadow-xs" : ""
               }`}
             >
@@ -76,7 +76,7 @@ export function RecentTransactionsTable() {
             </button>
             <button
               onClick={() => setFilterType("expense")}
-              className={`px-2.5 py-1 rounded-md transition-all ${
+              className={`px-2.5 py-1 rounded-md transition-all shrink-0 ${
                 filterType === "expense" ? "bg-white text-rose-700 font-bold shadow-xs" : ""
               }`}
             >
@@ -84,7 +84,7 @@ export function RecentTransactionsTable() {
             </button>
             <button
               onClick={() => setFilterType("pending")}
-              className={`px-2.5 py-1 rounded-md transition-all ${
+              className={`px-2.5 py-1 rounded-md transition-all shrink-0 ${
                 filterType === "pending" ? "bg-white text-amber-700 font-bold shadow-xs" : ""
               }`}
             >
@@ -93,20 +93,20 @@ export function RecentTransactionsTable() {
           </div>
 
           {/* Quick Search */}
-          <div className="relative">
+          <div className="relative flex-1 sm:flex-initial">
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Filter mitra/no. ref..."
-              className="pl-8 pr-3 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
+              className="w-full sm:w-44 pl-8 pr-3 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500"
             />
           </div>
 
           <button
             title="Export CSV/Excel"
-            className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors"
+            className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors shrink-0"
           >
             <Download className="w-3.5 h-3.5" />
           </button>
@@ -115,7 +115,7 @@ export function RecentTransactionsTable() {
 
       {/* Table Element */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-xs">
+        <table className="w-full text-left text-xs min-w-[640px]">
           <thead className="bg-slate-50/80 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200/80 text-[11px]">
             <tr>
               <th className="py-3 px-4">No. Referensi</th>

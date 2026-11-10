@@ -538,8 +538,8 @@ export function Variant2GlassCard() {
               </div>
             ) : (
               <div className="space-y-4">
-                {/* 6 Digit Input Boxes */}
-                <div className="flex justify-center gap-2">
+                {/* 6 Digit Input Boxes (Responsive on all screen sizes) */}
+                <div className="flex justify-center items-center gap-1.5 sm:gap-2">
                   {[0, 1, 2, 3, 4, 5].map((i) => (
                     <input
                       key={i}
@@ -552,7 +552,7 @@ export function Variant2GlassCard() {
                       value={otp[i]}
                       onChange={(e) => handleOtpChange(i, e.target.value)}
                       onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                      className="w-11 h-12 text-center text-lg font-bold font-mono bg-white border border-slate-200 rounded-xl focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 outline-none shadow-2xs transition-all"
+                      className="w-9 sm:w-11 h-11 sm:h-12 text-center text-base sm:text-lg font-bold font-mono bg-white border border-slate-200 rounded-xl focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 outline-none shadow-2xs transition-all"
                     />
                   ))}
                 </div>

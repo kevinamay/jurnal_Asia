@@ -42,14 +42,14 @@ export default function ReceivablePage() {
     .reduce((acc, curr) => acc + curr.paidAmount, 0);
 
   return (
-    <div className="space-y-6">
-      {/* Metric summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white p-5 rounded-xl border border-slate-200/90 shadow-soft">
+    <div className="space-y-4 sm:space-y-6">
+      {/* Metric summary (1 col mobile, 2 col tablet, 3 col desktop) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200/90 shadow-soft">
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">
             Total Piutang Belum Tertagih
           </span>
-          <div className="text-2xl font-bold text-slate-900 font-mono">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 font-mono">
             {formatIDR(totalOutstanding)}
           </div>
           <span className="text-xs text-slate-500 font-medium mt-1 flex items-center gap-1">
@@ -57,11 +57,11 @@ export default function ReceivablePage() {
           </span>
         </div>
 
-        <div className="bg-white p-5 rounded-xl border border-slate-200/90 shadow-soft">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200/90 shadow-soft">
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">
             Piutang Jatuh Tempo (Overdue)
           </span>
-          <div className="text-2xl font-bold text-slate-900 font-mono">
+          <div className="text-xl sm:text-2xl font-bold text-slate-900 font-mono">
             {formatIDR(overdueTotal)}
           </div>
           <span className="text-xs text-slate-500 font-medium mt-1 flex items-center gap-1">
@@ -69,11 +69,11 @@ export default function ReceivablePage() {
           </span>
         </div>
 
-        <div className="bg-white p-5 rounded-xl border border-slate-200/90 shadow-soft">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200/90 shadow-soft sm:col-span-2 lg:col-span-1">
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">
             Pelunasan Bulan Ini (MTD)
           </span>
-          <div className="text-2xl font-bold text-emerald-600 font-mono">
+          <div className="text-xl sm:text-2xl font-bold text-emerald-600 font-mono">
             {formatIDR(collectedMTD)}
           </div>
           <span className="text-xs text-emerald-600 font-medium mt-1 flex items-center gap-1">
@@ -82,7 +82,7 @@ export default function ReceivablePage() {
         </div>
       </div>
 
-      {/* Invoices Table */}
+      {/* Invoices Table with Horizontal Scroll on Mobile */}
       <div className="bg-white rounded-xl border border-slate-200/90 shadow-soft overflow-hidden">
         <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
@@ -90,14 +90,14 @@ export default function ReceivablePage() {
             <p className="text-xs text-slate-500">Monitor status pembayaran dan umur piutang pelanggan</p>
           </div>
           <div className="flex items-center gap-2">
-            <button className="px-3 py-1.5 text-xs font-semibold text-white bg-sky-500 hover:bg-sky-600 rounded-lg shadow-xs flex items-center gap-1.5">
+            <button className="w-full sm:w-auto px-3 py-1.5 text-xs font-semibold text-white bg-sky-500 hover:bg-sky-600 rounded-lg shadow-xs flex items-center justify-center gap-1.5">
               <Plus className="w-3.5 h-3.5" /> Buat Tagihan Baru
             </button>
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+          <table className="w-full text-left text-xs min-w-[650px]">
             <thead className="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider border-b border-slate-200 text-[11px]">
               <tr>
                 <th className="py-3 px-4">No. Invoice</th>
@@ -145,7 +145,7 @@ export default function ReceivablePage() {
               ) : (
                 <tr>
                   <td colSpan={7} className="py-16 text-center text-slate-500 bg-slate-50/30">
-                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto space-y-3">
+                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto space-y-3 px-4">
                       <div className="w-12 h-12 rounded-full bg-sky-50 flex items-center justify-center text-sky-500 border border-sky-100">
                         <FileText className="w-6 h-6" />
                       </div>

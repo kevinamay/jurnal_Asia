@@ -3,17 +3,16 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  Menu,
   Plus,
   Calendar,
   Search,
   Bell,
   ChevronDown,
-  CheckCircle2,
   FilePlus2,
   Receipt,
   FileText,
   LogOut,
-  User,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -48,7 +47,11 @@ const TITLE_MAP: Record<string, { title: string; subtitle: string }> = {
   },
 };
 
-export function Topbar() {
+interface TopbarProps {
+  onToggleSidebar?: () => void;
+}
+
+export function Topbar({ onToggleSidebar }: TopbarProps) {
   const pathname = usePathname();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -92,47 +95,60 @@ export function Topbar() {
   }).format(new Date());
 
   const displayName = currentUser?.fullName || "Staf Keuangan";
-  const userInitials = displayName
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase() || "AP";
+  const userInitials =
+    displayName
+      .split(" ")
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((w) => w[0])
+      .join("")
+      .toUpperCase() || "AP";
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200/90 px-6 flex items-center justify-between sticky top-0 z-30 shadow-xs">
-      {/* Page Title & Context */}
-      <div>
-        <div className="flex items-center gap-2">
-          <h1 className="text-lg font-bold text-slate-900 tracking-tight leading-none">
-            {currentRouteInfo.title}
-          </h1>
-          <span className="text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            Live
-          </span>
+    <header className="h-16 bg-white border-b border-slate-200/90 px-3 sm:px-6 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+      {/* Left: Mobile Hamburger Toggle + Page Title */}
+      <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+        <button
+          type="button"
+          onClick={onToggleSidebar}
+          className="lg:hidden p-2 -ml-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+          aria-label="Buka Menu Navigasi"
+          title="Buka Menu"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <h1 className="text-sm sm:text-base lg:text-lg font-bold text-slate-900 tracking-tight leading-none truncate">
+              {currentRouteInfo.title}
+            </h1>
+            <span className="hidden sm:inline-flex text-[10px] sm:text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 items-center gap-1 shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Live
+            </span>
+          </div>
+          <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 truncate max-w-[150px] sm:max-w-xs md:max-w-md lg:max-w-xl">
+            {currentRouteInfo.subtitle}
+          </p>
         </div>
-        <p className="text-xs text-slate-500 mt-0.5 truncate max-w-xl">
-          {currentRouteInfo.subtitle}
-        </p>
       </div>
 
-      {/* Right Action Tools: Date, Search, Quick Action, Profile */}
-      <div className="flex items-center gap-3">
-        {/* Date Display */}
-        <div className="hidden lg:flex items-center gap-2 text-xs font-medium text-slate-600 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200/80">
+      {/* Right Tools: Date, Search, Quick Action, Profile */}
+      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        {/* Date Display (Desktop only) */}
+        <div className="hidden xl:flex items-center gap-2 text-xs font-medium text-slate-600 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200/80">
           <Calendar className="w-3.5 h-3.5 text-slate-400" />
           <span>{currentDateFormatted}</span>
         </div>
 
-        {/* Search Quick trigger */}
+        {/* Search Input (Medium and up) */}
         <div className="relative hidden md:block">
           <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Cari transaksi / akun... (Ctrl+K)"
-            className="w-56 pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
+            className="w-44 lg:w-56 pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all"
           />
         </div>
 
@@ -145,21 +161,22 @@ export function Topbar() {
           <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white"></span>
         </button>
 
-        <div className="h-6 w-[1px] bg-slate-200 mx-0.5"></div>
+        <div className="hidden sm:block h-6 w-[1px] bg-slate-200 mx-0.5"></div>
 
-        {/* Quick 'New Transaction' Action Button with Dropdown */}
+        {/* Quick 'New Transaction' Action Button */}
         <div className="relative">
           <div className="inline-flex rounded-lg shadow-sm">
             <Link
               href="/journal/new"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white bg-sky-500 hover:bg-sky-600 rounded-l-lg transition-colors shadow-xs"
+              className="inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold text-white bg-sky-500 hover:bg-sky-600 rounded-l-lg transition-colors shadow-xs"
             >
               <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-              <span>Transaksi Baru</span>
+              <span className="hidden sm:inline">Transaksi Baru</span>
+              <span className="sm:hidden text-[11px] font-bold">Baru</span>
             </Link>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="px-2 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-r-lg border-l border-sky-400/40 transition-colors"
+              className="px-1.5 sm:px-2 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-r-lg border-l border-sky-400/40 transition-colors"
               title="Pilihan Transaksi Lain"
             >
               <ChevronDown className="w-3.5 h-3.5" />
@@ -206,12 +223,12 @@ export function Topbar() {
         <div className="relative">
           <div
             onClick={() => setProfileOpen(!profileOpen)}
-            className="flex items-center gap-2.5 pl-1.5 py-1 pr-2 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200 cursor-pointer select-none"
+            className="flex items-center gap-2 pl-1 sm:pl-1.5 py-1 pr-1.5 sm:pr-2 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200 cursor-pointer select-none"
           >
-            <div className="w-8 h-8 rounded-full bg-sky-100 text-sky-700 font-bold text-xs flex items-center justify-center border border-sky-300">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-sky-100 text-sky-700 font-bold text-xs flex items-center justify-center border border-sky-300">
               {userInitials}
             </div>
-            <div className="hidden sm:block text-left">
+            <div className="hidden md:block text-left">
               <p className="text-xs font-bold text-slate-800 leading-tight truncate max-w-[120px]">
                 {displayName}
               </p>

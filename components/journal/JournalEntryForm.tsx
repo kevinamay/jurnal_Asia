@@ -172,7 +172,7 @@ export function JournalEntryForm() {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Reference Number */}
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
@@ -233,7 +233,7 @@ export function JournalEntryForm() {
             </div>
 
             {/* General Description */}
-            <div className="md:col-span-4 mt-1">
+            <div className="sm:col-span-2 lg:col-span-4 mt-1">
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
                 Keterangan Transaksi Keseluruhan <span className="text-rose-500">*</span>
               </label>
@@ -472,24 +472,24 @@ export function JournalEntryForm() {
           </div>
 
           {/* Form Actions */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full md:w-auto">
             <button
               type="button"
               onClick={() => reset()}
-              className="px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors"
+              className="flex-1 sm:flex-initial px-4 py-2 text-xs font-semibold text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors text-center"
             >
               Reset Form
             </button>
             <button
               type="button"
-              className="px-4 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors border border-slate-200"
+              className="flex-1 sm:flex-initial px-4 py-2 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors border border-slate-200 text-center"
             >
-              Simpan sebagai Draf
+              Simpan Draf
             </button>
             <button
               type="submit"
               disabled={!isBalanced || isSubmitting}
-              className="inline-flex items-center gap-2 px-5 py-2 text-xs font-bold text-white bg-sky-500 hover:bg-sky-600 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg shadow-sm shadow-sky-500/20 transition-all"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2 text-xs font-bold text-white bg-sky-500 hover:bg-sky-600 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg shadow-sm shadow-sky-500/20 transition-all"
             >
               <Save className="w-4 h-4" />
               <span>{isSubmitting ? "Memposting..." : "Simpan & Posting Jurnal"}</span>
