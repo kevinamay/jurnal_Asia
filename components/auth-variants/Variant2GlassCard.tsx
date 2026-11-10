@@ -295,7 +295,6 @@ export function Variant2GlassCard() {
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Masukkan nama lengkap staf"
                     className="w-full pl-9 pr-3 py-2.5 bg-slate-50/80 border border-slate-200/90 rounded-xl focus:bg-white focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all"
                   />
                 </div>
@@ -309,7 +308,6 @@ export function Variant2GlassCard() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="nama@asiaplastik.com"
                     className="w-full pl-9 pr-3 py-2.5 bg-slate-50/80 border border-slate-200/90 rounded-xl focus:bg-white focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all"
                   />
                 </div>
@@ -323,7 +321,6 @@ export function Variant2GlassCard() {
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Contoh: 082244109503"
                     className="w-full pl-9 pr-3 py-2.5 bg-slate-50/80 border border-slate-200/90 rounded-xl focus:bg-white focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all"
                   />
                 </div>
@@ -337,7 +334,6 @@ export function Variant2GlassCard() {
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Minimal 6 karakter"
                     className="w-full pl-9 pr-9 py-2.5 bg-slate-50/80 border border-slate-200/90 rounded-xl focus:bg-white focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all font-mono text-xs"
                   />
                   <button
@@ -370,7 +366,6 @@ export function Variant2GlassCard() {
                     type={showConfirmPassword ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Ulangi kata sandi Anda"
                     className={`w-full pl-9 pr-9 py-2.5 bg-slate-50/80 border rounded-xl focus:bg-white focus:ring-2 outline-none transition-all font-mono text-xs ${
                       confirmPassword && password !== confirmPassword
                         ? "border-rose-300 focus:border-rose-500 focus:ring-rose-500/20"
