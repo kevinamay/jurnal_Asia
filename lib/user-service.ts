@@ -7,7 +7,6 @@ export interface UserRegistrationData {
   phone: string;
   password?: string;
   channel: "wa" | "email";
-  role?: string;
   company?: string;
   status?: "ACTIVE" | "VERIFIED" | "PENDING";
   isEmailVerified?: boolean;
@@ -37,7 +36,6 @@ export async function saveUserRegistration(data: {
   phone: string;
   password?: string;
   channel: "wa" | "email";
-  role?: string;
 }): Promise<{ success: boolean; id: string; source: "firestore" | "local_fallback"; message?: string }> {
   const cleanEmail = data.email.trim().toLowerCase();
   const cleanPhone = data.phone.trim().replace(/[^0-9]/g, "");
@@ -48,7 +46,6 @@ export async function saveUserRegistration(data: {
     phone: cleanPhone,
     password: data.password || "",
     channel: data.channel,
-    role: data.role || "Staf Keuangan",
     company: "CV ASIA PLASTIK",
     status: "ACTIVE",
     isEmailVerified: true,
@@ -107,7 +104,7 @@ export async function authenticateUser(
     }
     return {
       success: true,
-      user: { fullName: localUser.fullName, email: localUser.email, role: localUser.role },
+      user: { fullName: localUser.fullName, email: localUser.email },
     };
   }
 
@@ -133,7 +130,7 @@ export async function authenticateUser(
       }
       return {
         success: true,
-        user: { fullName: firestoreUser.fullName, email: firestoreUser.email, role: firestoreUser.role },
+        user: { fullName: firestoreUser.fullName, email: firestoreUser.email },
       };
     }
   } catch (err) {

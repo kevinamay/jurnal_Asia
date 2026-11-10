@@ -32,7 +32,6 @@ export async function POST(request: Request) {
         phone: userProfile.phone || (!target.includes("@") ? target : ""),
         password: userProfile.password || "",
         channel: userProfile.channel || (target.includes("@") ? "email" : "wa"),
-        role: "Staf Keuangan",
       });
     }
 

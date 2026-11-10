@@ -21,7 +21,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { fullName, email, phone, channel, role } = body;
+    const { fullName, email, phone, channel } = body;
 
     if (!fullName || !email || !phone) {
       return NextResponse.json(
@@ -35,7 +35,6 @@ export async function POST(request: Request) {
       email,
       phone,
       channel: channel || "wa",
-      role: role || "Staf Keuangan",
     });
 
     return NextResponse.json({
