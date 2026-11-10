@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Loader2,
+  HelpCircle,
 } from "lucide-react";
 
 export function Variant2GlassCard() {
@@ -192,27 +193,34 @@ export function Variant2GlassCard() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-radial-gradient from-sky-100/60 via-slate-50 to-white flex flex-col items-center justify-center p-4 relative overflow-hidden font-sans">
-      {/* Decorative gradient ambient orbs */}
-      <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-sky-200/40 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-sky-300/30 rounded-full blur-3xl pointer-events-none"></div>
+    <div className="min-h-screen w-full bg-gradient-to-br from-sky-100/70 via-white to-sky-50 flex flex-col items-center justify-center p-4 relative overflow-hidden font-sans py-12">
+      {/* Decorative gradient ambient orbs & glow (Putih & Biru Muda) */}
+      <div className="absolute -top-24 -left-24 w-96 h-96 bg-sky-200/50 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-sky-300/35 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[38rem] h-[38rem] bg-gradient-to-tr from-sky-100/40 via-sky-200/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+
+      {/* Subtle modern texture overlay */}
+      <div
+        className="absolute inset-0 bg-[radial-gradient(#0284c7_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.035] pointer-events-none"
+        aria-hidden="true"
+      ></div>
 
       {/* Brand Header */}
       <div className="relative z-10 mb-6 text-center">
-        <div className="bg-white/80 backdrop-blur-md px-5 py-2.5 rounded-2xl shadow-soft border border-slate-200/80 inline-block">
+        <div className="bg-white/85 backdrop-blur-md px-5 py-2 rounded-2xl shadow-xs border border-sky-100/80 inline-block">
           <Image
             src="/logos/logo.webp"
             alt="CV ASIA PLASTIK"
-            width={190}
-            height={64}
-            className="h-9 w-auto object-contain mx-auto"
+            width={170}
+            height={58}
+            className="h-8 w-auto object-contain mx-auto"
             priority
           />
         </div>
       </div>
 
       {/* Main Glassmorphism Card */}
-      <div className="relative z-10 w-full max-w-lg bg-white/90 backdrop-blur-xl rounded-3xl p-8 border border-white/60 shadow-elevation">
+      <div className="relative z-10 w-full max-w-lg bg-white/95 backdrop-blur-xl rounded-3xl p-8 border border-white/90 shadow-[0_20px_45px_rgba(14,165,233,0.08),0_2px_6px_rgba(15,23,42,0.04)]">
         {/* Step Indicator Header */}
         <div className="mb-6 pb-4 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -258,7 +266,7 @@ export function Variant2GlassCard() {
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="Masukkan nama lengkap staf"
-                    className="w-full pl-9 pr-3 py-2.5 bg-white/70 border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all"
+                    className="w-full pl-9 pr-3 py-2.5 bg-slate-50/80 border border-slate-200/90 rounded-xl focus:bg-white focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all"
                   />
                 </div>
               </div>
@@ -272,7 +280,7 @@ export function Variant2GlassCard() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="nama@asiaplastik.com"
-                    className="w-full pl-9 pr-3 py-2.5 bg-white/70 border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all"
+                    className="w-full pl-9 pr-3 py-2.5 bg-slate-50/80 border border-slate-200/90 rounded-xl focus:bg-white focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all"
                   />
                 </div>
               </div>
@@ -286,7 +294,7 @@ export function Variant2GlassCard() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="Contoh: 082244109503"
-                    className="w-full pl-9 pr-3 py-2.5 bg-white/70 border border-slate-200 rounded-xl focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all"
+                    className="w-full pl-9 pr-3 py-2.5 bg-slate-50/80 border border-slate-200/90 rounded-xl focus:bg-white focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all"
                   />
                 </div>
               </div>
@@ -504,6 +512,17 @@ export function Variant2GlassCard() {
             )}
           </div>
         )}
+      </div>
+
+      {/* Bottom Help Desk */}
+      <div className="relative z-10 text-center mt-6">
+        <Link
+          href="mailto:it-support@asiaplastik.com"
+          className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-sky-700 transition-colors bg-white/70 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-sky-100/80 shadow-2xs"
+        >
+          <HelpCircle className="w-3.5 h-3.5 text-sky-500" />
+          <span>Pusat Bantuan IT Pabrik Surabaya</span>
+        </Link>
       </div>
     </div>
   );
