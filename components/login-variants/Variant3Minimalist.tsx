@@ -57,8 +57,8 @@ export function Variant3Minimalist() {
 
       router.push("/dashboard");
     } catch (err) {
-      console.error("Login fallback:", err);
-      router.push("/dashboard");
+      console.error("Login error:", err);
+      setErrorMessage("Terjadi gangguan koneksi ke server. Silakan coba sesaat lagi.");
     } finally {
       setIsLoading(false);
     }

@@ -1,5 +1,6 @@
 import { db } from "./firebase";
 import { collection, doc, setDoc, getDoc, getDocs, query, orderBy, limit } from "firebase/firestore";
+import bcrypt from "bcryptjs";
 
 export interface UserRegistrationData {
   fullName: string;
@@ -40,11 +41,13 @@ export async function saveUserRegistration(data: {
   const cleanEmail = data.email.trim().toLowerCase();
   const cleanPhone = data.phone.trim().replace(/[^0-9]/g, "");
 
+  const hashedPassword = data.password ? await bcrypt.hash(data.password, 10) : "";
+
   const userDoc: UserRegistrationData = {
     fullName: data.fullName.trim(),
     email: cleanEmail,
     phone: cleanPhone,
-    password: data.password || "",
+    password: hashedPassword,
     channel: data.channel,
     company: "CV ASIA PLASTIK",
     status: "ACTIVE",
@@ -96,10 +99,24 @@ export async function authenticateUser(
 ): Promise<{ success: boolean; message?: string; user?: Partial<UserRegistrationData> }> {
   const cleanEmail = email.trim().toLowerCase();
 
+  const verifyPassword = async (storedPassword?: string): Promise<boolean> => {
+    if (!storedPassword) return true;
+    try {
+      if (await bcrypt.compare(passwordInput, storedPassword)) {
+        return true;
+      }
+    } catch {
+      // Abaikan jika storedPassword bukan hash bcrypt
+    }
+    // Fallback untuk akun lama dengan plaintext
+    return storedPassword === passwordInput;
+  };
+
   // 1. Cek dari memori lokal terlebih dahulu
   const localUser = localUsersStore.get(cleanEmail);
-  if (localUser && localUser.password) {
-    if (localUser.password !== passwordInput) {
+  if (localUser) {
+    const isMatch = await verifyPassword(localUser.password);
+    if (!isMatch) {
       return { success: false, message: "Kata sandi yang Anda masukkan salah." };
     }
     return {
@@ -125,7 +142,8 @@ export async function authenticateUser(
 
     const firestoreUser = await Promise.race([fetchUser(), timeoutGuard]);
     if (firestoreUser) {
-      if (firestoreUser.password && firestoreUser.password !== passwordInput) {
+      const isMatch = await verifyPassword(firestoreUser.password);
+      if (!isMatch) {
         return { success: false, message: "Kata sandi yang Anda masukkan salah." };
       }
       return {
@@ -137,8 +155,11 @@ export async function authenticateUser(
     console.warn("Firestore auth read warning:", err);
   }
 
-  // Default demo bypass jika email tidak ditemukan di registrasi sebelumnya
-  return { success: true };
+  // Jika email belum pernah terdaftar di sistem
+  return {
+    success: false,
+    message: "Email belum terdaftar. Silakan lakukan registrasi staf terlebih dahulu.",
+  };
 }
 
 /**

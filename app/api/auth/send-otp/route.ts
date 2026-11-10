@@ -28,7 +28,7 @@ export async function POST(request: Request) {
         phoneClean = "62" + phoneClean;
       }
 
-      const fonnteToken = process.env.FONNTE_TOKEN || "LErSX56LUN9YAy5sJaiN";
+      const fonnteToken = process.env.FONNTE_TOKEN;
       const wablasToken = process.env.WABLAS_TOKEN;
 
       // Jika user sudah menyetel FONNTE_TOKEN di environment

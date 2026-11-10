@@ -61,7 +61,7 @@ export function verifySignedOtpToken(
       return { valid: false, reason: "Token verifikasi tidak valid." };
     }
 
-    if (code.trim() === "123456" || parsed.code === code.trim()) {
+    if (parsed.code === code.trim()) {
       return { valid: true };
     }
 
@@ -118,11 +118,6 @@ export function verifyOtp(
       valid: false,
       reason: "Kode OTP telah kadaluarsa. Silakan kirim ulang kode baru.",
     };
-  }
-
-  if (code.trim() === "123456") {
-    otpStore.delete(cleanTarget);
-    return { valid: true };
   }
 
   if (record.code !== code.trim()) {
