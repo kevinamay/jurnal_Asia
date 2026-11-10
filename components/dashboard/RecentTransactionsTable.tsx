@@ -130,8 +130,12 @@ export function RecentTransactionsTable() {
           <tbody className="divide-y divide-slate-100 font-sans">
             {filteredTransactions.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-8 text-center text-slate-400">
-                  Tidak ada data transaksi yang cocok dengan kriteria filter.
+                <td colSpan={7} className="py-12 text-center text-slate-400">
+                  <FileText className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                  <p className="font-semibold text-slate-600">Belum ada transaksi yang tercatat</p>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    Gunakan tombol &apos;Entri Jurnal Baru&apos; untuk mulai mencatat transaksi akuntansi periode ini.
+                  </p>
                 </td>
               </tr>
             ) : (
@@ -218,28 +222,24 @@ export function RecentTransactionsTable() {
       {/* Table Pagination / Summary Footer */}
       <div className="p-3 bg-slate-50/60 border-t border-slate-200/80 flex items-center justify-between text-xs text-slate-500">
         <span>
-          Menampilkan <strong className="text-slate-700">{filteredTransactions.length}</strong> dari 142 entri transaksi bulan ini
+          Menampilkan <strong className="text-slate-700">{filteredTransactions.length}</strong> dari {transactions.length} entri transaksi
         </span>
-        <div className="flex items-center gap-1">
-          <button
-            disabled
-            className="px-2.5 py-1 rounded border border-slate-200 text-slate-300 cursor-not-allowed bg-white"
-          >
-            Sebelumnya
-          </button>
-          <button className="px-2.5 py-1 rounded border border-slate-200 text-slate-700 hover:bg-slate-100 bg-white font-medium">
-            1
-          </button>
-          <button className="px-2.5 py-1 rounded border border-slate-200 text-slate-600 hover:bg-slate-100 bg-white">
-            2
-          </button>
-          <button className="px-2.5 py-1 rounded border border-slate-200 text-slate-600 hover:bg-slate-100 bg-white">
-            3
-          </button>
-          <button className="px-2.5 py-1 rounded border border-slate-200 text-slate-700 hover:bg-slate-100 bg-white font-medium">
-            Selanjutnya
-          </button>
-        </div>
+        {transactions.length > 0 && (
+          <div className="flex items-center gap-1">
+            <button
+              disabled
+              className="px-2.5 py-1 rounded border border-slate-200 text-slate-300 cursor-not-allowed bg-white"
+            >
+              Sebelumnya
+            </button>
+            <button className="px-2.5 py-1 rounded border border-slate-200 text-slate-700 hover:bg-slate-100 bg-white font-medium">
+              1
+            </button>
+            <button className="px-2.5 py-1 rounded border border-slate-200 text-slate-700 hover:bg-slate-100 bg-white font-medium">
+              Selanjutnya
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

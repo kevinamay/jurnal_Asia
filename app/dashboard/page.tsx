@@ -19,7 +19,7 @@ export default function DashboardPage() {
               Periode Akuntansi Berjalan: November 2026
             </h2>
             <p className="text-xs text-slate-600 mt-0.5">
-              14 faktur menunggu verifikasi pelunasan dan 3 entri draf jurnal siap diposting ke Buku Besar.
+              Sistem pembukuan siap digunakan. Buat entri jurnal baru atau faktur untuk memulai pencatatan keuangan.
             </p>
           </div>
         </div>

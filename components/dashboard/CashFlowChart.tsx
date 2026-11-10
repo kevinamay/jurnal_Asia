@@ -77,6 +77,12 @@ export function CashFlowChart() {
     setMounted(true);
   }, []);
 
+  const totalIncome = CASH_FLOW_DATA.reduce((acc, curr) => acc + curr.income, 0);
+  const totalExpense = CASH_FLOW_DATA.reduce((acc, curr) => acc + curr.expense, 0);
+  const avgIncome = CASH_FLOW_DATA.length ? Math.round(totalIncome / CASH_FLOW_DATA.length) : 0;
+  const avgExpense = CASH_FLOW_DATA.length ? Math.round(totalExpense / CASH_FLOW_DATA.length) : 0;
+  const avgNet = avgIncome - avgExpense;
+
   return (
     <div className="bg-white rounded-xl p-5 border border-slate-200/90 shadow-soft">
       {/* Chart Header */}
@@ -179,17 +185,19 @@ export function CashFlowChart() {
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-sky-500"></div>
           <span className="text-slate-500">Rata-rata Pendapatan:</span>
-          <span className="font-bold text-slate-800 font-mono">Rp 765,4 Jt / bln</span>
+          <span className="font-bold text-slate-800 font-mono">{formatIDR(avgIncome)} / bln</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-rose-500"></div>
           <span className="text-slate-500">Rata-rata Pengeluaran:</span>
-          <span className="font-bold text-slate-800 font-mono">Rp 511,4 Jt / bln</span>
+          <span className="font-bold text-slate-800 font-mono">{formatIDR(avgExpense)} / bln</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
           <span className="text-slate-500">Rata-rata Surplus:</span>
-          <span className="font-bold text-emerald-600 font-mono">+Rp 254,0 Jt / bln</span>
+          <span className={`font-bold font-mono ${avgNet >= 0 ? "text-emerald-600" : "text-rose-600"}`}>
+            {avgNet > 0 ? "+" : ""}{formatIDR(avgNet)} / bln
+          </span>
         </div>
       </div>
     </div>

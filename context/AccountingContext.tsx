@@ -35,21 +35,25 @@ interface AccountingContextType {
 
 const AccountingContext = createContext<AccountingContextType | undefined>(undefined);
 
-const STORAGE_KEY = "asia_plastik_transactions_v1";
+const STORAGE_KEY = "asia_plastik_clean_v2";
 
 export function AccountingProvider({ children }: { children: React.ReactNode }) {
   const [transactions, setTransactions] = useState<Transaction[]>(RECENT_TRANSACTIONS);
   const [bankBalances, setBankBalances] = useState(BANK_BALANCES);
 
-  // Load from localStorage if available
+  // Load from localStorage if available (hanya data bersih baru)
   useEffect(() => {
     try {
+      // Hapus cache lama jika ada
+      localStorage.removeItem("asia_plastik_transactions_v1");
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
           setTransactions(parsed);
         }
+      } else {
+        setTransactions([]);
       }
     } catch {
       // Ignore localStorage errors

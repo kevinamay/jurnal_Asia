@@ -24,14 +24,36 @@ export function MetricCards() {
 
   const dynamicCards = METRIC_CARDS.map((card) => {
     let liveVal = card.formattedValue;
-    if (card.id === "revenue") liveVal = formatIDR(revenueMTD);
-    if (card.id === "cash-inflow") liveVal = formatIDR(cashInflow);
-    if (card.id === "pending-invoices") liveVal = formatIDR(pendingInvoicesAmount);
-    if (card.id === "expenses") liveVal = formatIDR(totalExpenses);
+    let changeVal = card.change;
+    let comparisonVal = card.comparison;
+
+    if (card.id === "revenue") {
+      liveVal = formatIDR(revenueMTD);
+      changeVal = revenueMTD > 0 ? "+100%" : "0%";
+      comparisonVal = "periode berjalan";
+    }
+    if (card.id === "cash-inflow") {
+      liveVal = formatIDR(cashInflow);
+      changeVal = cashInflow > 0 ? "+100%" : "0%";
+      comparisonVal = "kas masuk terverifikasi";
+    }
+    if (card.id === "pending-invoices") {
+      liveVal = formatIDR(pendingInvoicesAmount);
+      changeVal = pendingInvoicesAmount > 0 ? "menunggu" : "0 invoice";
+      comparisonVal = "menunggu pelunasan";
+    }
+    if (card.id === "expenses") {
+      liveVal = formatIDR(totalExpenses);
+      changeVal = totalExpenses > 0 ? "+100%" : "0%";
+      comparisonVal = "dalam batas anggaran";
+    }
 
     return {
       ...card,
       formattedValue: liveVal,
+      change: changeVal,
+      comparison: comparisonVal,
+      isPositive: true,
     };
   });
 

@@ -49,13 +49,13 @@ const NAV_ITEMS = [
         label: "Piutang Usaha (A/R)",
         href: "/receivable",
         icon: ArrowDownLeft,
-        badge: "14",
+        badge: null,
       },
       {
         label: "Hutang Usaha (A/P)",
         href: "/payable",
         icon: ArrowUpRight,
-        badge: "5",
+        badge: null,
       },
       {
         label: "Laporan Keuangan",
