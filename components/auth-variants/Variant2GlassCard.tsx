@@ -498,35 +498,20 @@ export function Variant2GlassCard() {
               </p>
             </div>
 
-            {/* Notifikasi Status Pengiriman OTP & Petunjuk Kode Demo */}
-            <div className="p-3.5 rounded-2xl bg-sky-50 border border-sky-200/80 text-sky-900 text-xs space-y-2.5 shadow-2xs">
+            {/* Notifikasi Status Pengiriman OTP Real WhatsApp */}
+            <div className="p-3.5 rounded-2xl bg-emerald-50/90 border border-emerald-200/90 text-emerald-950 text-xs space-y-1.5 shadow-2xs">
               <div className="flex items-start gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
                 <div className="space-y-0.5">
-                  <p className="font-semibold text-sky-950">Mode Pengujian Sistem (Sandbox)</p>
-                  <p className="text-[11px] text-sky-700 leading-relaxed">
-                    Pengiriman chat WhatsApp resmi ke nomor fisik membutuhkan token API gateway berbayar. Untuk pengujian saat ini, silakan gunakan kode OTP di bawah ini:
+                  <p className="font-bold text-emerald-950">Kode Verifikasi Telah Dikirimkan ke WhatsApp!</p>
+                  <p className="text-[11px] text-emerald-700 leading-relaxed">
+                    Sistem telah mengirimkan 6 digit kode OTP langsung ke{" "}
+                    <strong className="text-emerald-950 font-bold">
+                      {channel === "wa" ? `WhatsApp (${phone})` : `Email (${email})`}
+                    </strong>
+                    . Silakan periksa notifikasi pesan masuk di handphone Anda.
                   </p>
                 </div>
-              </div>
-
-              <div className="flex items-center justify-between bg-white/95 px-3 py-2 rounded-xl border border-sky-200/90 shadow-2xs">
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] text-slate-500 font-medium">Kode OTP:</span>
-                  <span className="text-sm font-mono font-bold text-sky-700 tracking-widest bg-sky-50 px-2 py-0.5 rounded-md border border-sky-200">
-                    123456
-                  </span>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOtp(["1", "2", "3", "4", "5", "6"]);
-                    setErrorMessage("");
-                  }}
-                  className="px-2.5 py-1 bg-sky-500 hover:bg-sky-600 text-white font-bold text-[11px] rounded-lg shadow-2xs transition-all cursor-pointer active:scale-95"
-                >
-                  Isi Otomatis
-                </button>
               </div>
             </div>
 
