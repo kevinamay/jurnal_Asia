@@ -33,5 +33,6 @@ const firebaseConfig = {
 
 // Inisialisasi Firebase App (Singleton)
 export const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+// Menggunakan database 'default' sesuai yang terkonfigurasi di Firebase Console jurnalAsia
+export const db = getFirestore(app, "default");
 
