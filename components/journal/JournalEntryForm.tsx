@@ -113,8 +113,8 @@ export function JournalEntryForm() {
     }
 
     setIsSubmitting(true);
-    // Add to shared accounting context & localStorage
-    addJournalEntry({
+    // Add to shared accounting context & Firestore (multi-user)
+    await addJournalEntry({
       referenceNumber: data.referenceNumber,
       transactionDate: data.transactionDate,
       journalType: data.journalType,

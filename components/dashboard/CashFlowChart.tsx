@@ -14,6 +14,7 @@ import {
 import { CASH_FLOW_DATA } from "@/lib/mock-data";
 import { formatCompactIDR, formatIDR } from "@/lib/utils";
 import { ArrowUpRight, TrendingUp, Calendar } from "lucide-react";
+import { useAccounting } from "@/context/AccountingContext";
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -72,13 +73,26 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
 export function CashFlowChart() {
   const [mounted, setMounted] = useState(false);
   const [viewMode, setViewMode] = useState<"6m" | "ytd">("6m");
+  const { revenueMTD, totalExpenses } = useAccounting();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const totalIncome = CASH_FLOW_DATA.reduce((acc, curr) => acc + curr.income, 0);
-  const totalExpense = CASH_FLOW_DATA.reduce((acc, curr) => acc + curr.expense, 0);
+  const chartData = CASH_FLOW_DATA.map((item) => {
+    if (item.month === "Nov 2026") {
+      return {
+        ...item,
+        income: revenueMTD,
+        expense: totalExpenses,
+        net: revenueMTD - totalExpenses,
+      };
+    }
+    return item;
+  });
+
+  const totalIncome = chartData.reduce((acc, curr) => acc + curr.income, 0);
+  const totalExpense = chartData.reduce((acc, curr) => acc + curr.expense, 0);
   const avgIncome = CASH_FLOW_DATA.length ? Math.round(totalIncome / CASH_FLOW_DATA.length) : 0;
   const avgExpense = CASH_FLOW_DATA.length ? Math.round(totalExpense / CASH_FLOW_DATA.length) : 0;
   const avgNet = avgIncome - avgExpense;
@@ -131,7 +145,7 @@ export function CashFlowChart() {
         {mounted ? (
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
-              data={CASH_FLOW_DATA}
+              data={chartData}
               margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
               barGap={6}
             >

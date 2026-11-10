@@ -1,11 +1,12 @@
 "use client";
 
 import { Building, Wallet, ArrowUpRight, ShieldCheck, RefreshCw } from "lucide-react";
-import { BANK_BALANCES } from "@/lib/mock-data";
+import { useAccounting } from "@/context/AccountingContext";
 import { formatIDR } from "@/lib/utils";
 
 export function BankAccountsSummary() {
-  const totalLiquidity = BANK_BALANCES.reduce((acc, curr) => acc + curr.balance, 0);
+  const { bankBalances } = useAccounting();
+  const totalLiquidity = bankBalances.reduce((acc, curr) => acc + curr.balance, 0);
 
   return (
     <div className="bg-white rounded-xl p-5 border border-slate-200/90 shadow-soft flex flex-col justify-between">
@@ -39,7 +40,7 @@ export function BankAccountsSummary() {
 
         {/* Account List */}
         <div className="space-y-3">
-          {BANK_BALANCES.map((acc) => (
+          {bankBalances.map((acc) => (
             <div
               key={acc.id}
               className="p-2.5 rounded-lg border border-slate-100 hover:border-slate-200 hover:bg-slate-50/50 transition-colors flex items-center justify-between"
