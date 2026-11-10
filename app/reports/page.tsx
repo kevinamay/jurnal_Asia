@@ -12,6 +12,7 @@ import {
   Printer,
 } from "lucide-react";
 import { formatIDR } from "@/lib/utils";
+import { useAccounting } from "@/context/AccountingContext";
 
 const REPORT_CARDS = [
   {
@@ -19,7 +20,7 @@ const REPORT_CARDS = [
     title: "Neraca Keuangan (Balance Sheet)",
     description: "Posisi aset, liabilitas, dan ekuitas perusahaan per tanggal tertentu",
     icon: Scale,
-    updated: "08 Nov 2026",
+    updated: "Hari ini",
     badge: "Wajib Audit",
   },
   {
@@ -27,7 +28,7 @@ const REPORT_CARDS = [
     title: "Laporan Laba Rugi (Profit & Loss)",
     description: "Pendapatan kotor, HPP, beban operasional, dan laba bersih berjalan",
     icon: TrendingUp,
-    updated: "08 Nov 2026",
+    updated: "Hari ini",
     badge: "MTD + YTD",
   },
   {
@@ -35,7 +36,7 @@ const REPORT_CARDS = [
     title: "Laporan Arus Kas (Cash Flow Statement)",
     description: "Arus kas dari aktivitas operasi, investasi, dan pendanaan",
     icon: DollarSign,
-    updated: "08 Nov 2026",
+    updated: "Hari ini",
     badge: "Metode Langsung",
   },
   {
@@ -43,12 +44,18 @@ const REPORT_CARDS = [
     title: "Neraca Saldo (Trial Balance)",
     description: "Daftar saldo debit dan kredit seluruh akun COA untuk memastikan keseimbangan",
     icon: BarChart3,
-    updated: "08 Nov 2026",
+    updated: "Hari ini",
     badge: "Trial Balance",
   },
 ];
 
 export default function ReportsPage() {
+  const { revenueMTD, totalExpenses } = useAccounting();
+
+  const hpp = 0;
+  const grossProfit = revenueMTD - hpp;
+  const netIncome = grossProfit - totalExpenses;
+
   return (
     <div className="space-y-6">
       {/* Header Context */}
@@ -130,24 +137,24 @@ export default function ReportsPage() {
         <div className="space-y-2 text-xs font-sans">
           <div className="flex items-center justify-between py-1.5 px-2 bg-slate-50 rounded font-semibold text-slate-800">
             <span>Total Pendapatan Usaha (Revenue)</span>
-            <span className="font-mono text-emerald-600 font-bold">Rp 842.500.000</span>
+            <span className="font-mono text-emerald-600 font-bold">{formatIDR(revenueMTD)}</span>
           </div>
           <div className="flex items-center justify-between py-1.5 px-2 text-slate-600">
             <span className="pl-4">Beban Pokok Penjualan (HPP)</span>
-            <span className="font-mono font-semibold">(Rp 210.000.000)</span>
+            <span className="font-mono font-semibold">({formatIDR(hpp)})</span>
           </div>
           <div className="flex items-center justify-between py-1.5 px-2 border-t border-slate-200 font-bold text-slate-900">
             <span>LABA KOTOR (GROSS PROFIT)</span>
-            <span className="font-mono text-sky-600">Rp 632.500.000</span>
+            <span className="font-mono text-sky-600">{formatIDR(grossProfit)}</span>
           </div>
           <div className="flex items-center justify-between py-1.5 px-2 text-slate-600">
             <span className="pl-4">Total Beban Operasional & Gaji</span>
-            <span className="font-mono font-semibold">(Rp 308.350.000)</span>
+            <span className="font-mono font-semibold">({formatIDR(totalExpenses)})</span>
           </div>
           <div className="flex items-center justify-between py-2 px-2 bg-sky-50 border border-sky-200 rounded font-bold text-slate-900 text-sm">
             <span className="text-sky-950 font-extrabold">LABA BERSIH BERJALAN (NET INCOME)</span>
             <span className="font-mono text-emerald-600 font-extrabold text-base">
-              Rp 324.150.000
+              {formatIDR(netIncome)}
             </span>
           </div>
         </div>
@@ -155,4 +162,3 @@ export default function ReportsPage() {
     </div>
   );
 }
-

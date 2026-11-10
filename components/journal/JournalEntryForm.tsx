@@ -36,8 +36,8 @@ export interface JournalFormData {
 }
 
 const DEFAULT_ROWS: JournalLineItem[] = [
-  { accountId: "1-10002", description: "Penerimaan pelunasan invoice klien", debit: 50000000, credit: "" },
-  { accountId: "1-10100", description: "Pengurangan piutang usaha PT Digital Sinergi", debit: "", credit: 50000000 },
+  { accountId: "1-10001", description: "", debit: "", credit: "" },
+  { accountId: "1-10002", description: "", debit: "", credit: "" },
 ];
 
 export function JournalEntryForm() {
@@ -59,9 +59,9 @@ export function JournalEntryForm() {
       transactionDate: today,
       referenceNumber: `JV-${new Date().getFullYear()}/${(new Date().getMonth() + 1)
         .toString()
-        .padStart(2, "0")}-0049`,
+        .padStart(2, "0")}-0001`,
       journalType: "Jurnal Umum",
-      generalDescription: "Penerimaan pelunasan piutang termin 2 dan setoran ke BCA Giro",
+      generalDescription: "",
       lines: DEFAULT_ROWS,
     },
   });

@@ -4,72 +4,42 @@ import { useState } from "react";
 import { formatIDR } from "@/lib/utils";
 import {
   ArrowDownLeft,
-  Search,
   Plus,
-  Filter,
-  Download,
   AlertCircle,
   CheckCircle2,
   Clock,
+  FileText,
 } from "lucide-react";
-import Link from "next/link";
 
-const INVOICES_AR = [
-  {
-    id: "inv-1",
-    invoiceNumber: "INV-2026/11-0088",
-    customer: "CV Mandiri Sejahtera Abadi",
-    issueDate: "06 Nov 2026",
-    dueDate: "20 Nov 2026",
-    totalAmount: 48500000,
-    paidAmount: 0,
-    remainingAmount: 48500000,
-    status: "Pending",
-    aging: "1-15 Hari",
-  },
-  {
-    id: "inv-2",
-    invoiceNumber: "INV-2026/10-0075",
-    customer: "PT Mitra Perkasa Logistik",
-    issueDate: "15 Okt 2026",
-    dueDate: "30 Okt 2026",
-    totalAmount: 32000000,
-    paidAmount: 0,
-    remainingAmount: 32000000,
-    status: "Overdue",
-    aging: "10 Hari Terlambat",
-  },
-  {
-    id: "inv-3",
-    invoiceNumber: "INV-2026/10-0071",
-    customer: "PT Nusantara Prima Solusindo",
-    issueDate: "10 Okt 2026",
-    dueDate: "24 Okt 2026",
-    totalAmount: 77900000,
-    paidAmount: 0,
-    remainingAmount: 77900000,
-    status: "Overdue",
-    aging: "16 Hari Terlambat",
-  },
-  {
-    id: "inv-4",
-    invoiceNumber: "INV-2026/11-0089",
-    customer: "PT Digital Sinergi Nusantara",
-    issueDate: "25 Okt 2026",
-    dueDate: "08 Nov 2026",
-    totalAmount: 125000000,
-    paidAmount: 125000000,
-    remainingAmount: 0,
-    status: "Paid",
-    aging: "Lunas",
-  },
-];
+interface InvoiceAR {
+  id: string;
+  invoiceNumber: string;
+  customer: string;
+  issueDate: string;
+  dueDate: string;
+  totalAmount: number;
+  paidAmount: number;
+  remainingAmount: number;
+  status: "Paid" | "Pending" | "Overdue";
+  aging: string;
+}
+
+const INVOICES_AR: InvoiceAR[] = [];
 
 export default function ReceivablePage() {
-  const [filter, setFilter] = useState("all");
+  const [invoices] = useState<InvoiceAR[]>(INVOICES_AR);
 
-  const totalOutstanding = 158400000;
-  const overdueTotal = 109900000;
+  const totalOutstanding = invoices
+    .filter((i) => i.status !== "Paid")
+    .reduce((acc, curr) => acc + curr.remainingAmount, 0);
+
+  const overdueTotal = invoices
+    .filter((i) => i.status === "Overdue")
+    .reduce((acc, curr) => acc + curr.remainingAmount, 0);
+
+  const collectedMTD = invoices
+    .filter((i) => i.status === "Paid")
+    .reduce((acc, curr) => acc + curr.paidAmount, 0);
 
   return (
     <div className="space-y-6">
@@ -82,8 +52,8 @@ export default function ReceivablePage() {
           <div className="text-2xl font-bold text-slate-900 font-mono">
             {formatIDR(totalOutstanding)}
           </div>
-          <span className="text-xs text-amber-600 font-medium mt-1 flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5" /> 14 Invoice aktif menunggu pembayaran
+          <span className="text-xs text-slate-500 font-medium mt-1 flex items-center gap-1">
+            <Clock className="w-3.5 h-3.5 text-slate-400" /> {invoices.filter((i) => i.status !== "Paid").length} Invoice aktif menunggu pembayaran
           </span>
         </div>
 
@@ -91,11 +61,11 @@ export default function ReceivablePage() {
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">
             Piutang Jatuh Tempo (Overdue)
           </span>
-          <div className="text-2xl font-bold text-rose-600 font-mono">
+          <div className="text-2xl font-bold text-slate-900 font-mono">
             {formatIDR(overdueTotal)}
           </div>
-          <span className="text-xs text-rose-600 font-medium mt-1 flex items-center gap-1">
-            <AlertCircle className="w-3.5 h-3.5" /> 2 Invoice melewati batas kredit
+          <span className="text-xs text-slate-500 font-medium mt-1 flex items-center gap-1">
+            <AlertCircle className="w-3.5 h-3.5 text-slate-400" /> {invoices.filter((i) => i.status === "Overdue").length} Invoice melewati batas kredit
           </span>
         </div>
 
@@ -104,10 +74,10 @@ export default function ReceivablePage() {
             Pelunasan Bulan Ini (MTD)
           </span>
           <div className="text-2xl font-bold text-emerald-600 font-mono">
-            {formatIDR(284000000)}
+            {formatIDR(collectedMTD)}
           </div>
           <span className="text-xs text-emerald-600 font-medium mt-1 flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5" /> Tertagih tepat waktu
+            <CheckCircle2 className="w-3.5 h-3.5" /> Pembayaran piutang terverifikasi
           </span>
         </div>
       </div>
@@ -140,37 +110,61 @@ export default function ReceivablePage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 font-sans">
-              {INVOICES_AR.map((inv) => (
-                <tr key={inv.id} className="hover:bg-slate-50/70 transition-colors">
-                  <td className="py-3 px-4 font-mono font-bold text-sky-600">{inv.invoiceNumber}</td>
-                  <td className="py-3 px-4 font-semibold text-slate-800">{inv.customer}</td>
-                  <td className="py-3 px-4 text-slate-500">{inv.issueDate}</td>
-                  <td className="py-3 px-4 text-slate-700 font-medium">{inv.dueDate}</td>
-                  <td className="py-3 px-4 text-right font-mono font-bold text-slate-900">
-                    {formatIDR(inv.totalAmount)}
-                  </td>
-                  <td className="py-3 px-4 text-right font-mono font-bold text-slate-900">
-                    {formatIDR(inv.remainingAmount)}
-                  </td>
-                  <td className="py-3 px-4 text-center">
-                    {inv.status === "Paid" && (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                        Lunas
-                      </span>
-                    )}
-                    {inv.status === "Pending" && (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
-                        Menunggu
-                      </span>
-                    )}
-                    {inv.status === "Overdue" && (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
-                        {inv.aging}
-                      </span>
-                    )}
+              {invoices.length > 0 ? (
+                invoices.map((inv) => (
+                  <tr key={inv.id} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="py-3 px-4 font-mono font-bold text-sky-600">{inv.invoiceNumber}</td>
+                    <td className="py-3 px-4 font-semibold text-slate-800">{inv.customer}</td>
+                    <td className="py-3 px-4 text-slate-500">{inv.issueDate}</td>
+                    <td className="py-3 px-4 text-slate-700 font-medium">{inv.dueDate}</td>
+                    <td className="py-3 px-4 text-right font-mono font-bold text-slate-900">
+                      {formatIDR(inv.totalAmount)}
+                    </td>
+                    <td className="py-3 px-4 text-right font-mono font-bold text-slate-900">
+                      {formatIDR(inv.remainingAmount)}
+                    </td>
+                    <td className="py-3 px-4 text-center">
+                      {inv.status === "Paid" && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                          Lunas
+                        </span>
+                      )}
+                      {inv.status === "Pending" && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                          Menunggu
+                        </span>
+                      )}
+                      {inv.status === "Overdue" && (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                          {inv.aging}
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={7} className="py-16 text-center text-slate-500 bg-slate-50/30">
+                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto space-y-3">
+                      <div className="w-12 h-12 rounded-full bg-sky-50 flex items-center justify-center text-sky-500 border border-sky-100">
+                        <FileText className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-bold text-slate-800">
+                          Belum Ada Tagihan Piutang
+                        </h4>
+                        <p className="text-xs text-slate-500 mt-1">
+                          Belum ada transaksi piutang penjualan (A/R) yang tercatat untuk periode ini.
+                        </p>
+                      </div>
+                      <button className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-white bg-sky-500 hover:bg-sky-600 rounded-lg shadow-sm transition-all">
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Buat Tagihan Baru</span>
+                      </button>
+                    </div>
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>
@@ -178,4 +172,3 @@ export default function ReceivablePage() {
     </div>
   );
 }
-

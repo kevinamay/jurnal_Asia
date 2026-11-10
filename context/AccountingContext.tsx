@@ -23,9 +23,36 @@ export interface NewJournalPayload {
   lines: JournalLine[];
 }
 
+export interface StoredJournalEntry {
+  id: string;
+  referenceNumber: string;
+  transactionDate: string;
+  journalType: string;
+  generalDescription: string;
+  lines: {
+    accountId: string;
+    description: string;
+    debit: number;
+    credit: number;
+  }[];
+  createdAt: string;
+}
+
+export interface LedgerEntry {
+  id: string;
+  date: string;
+  ref: string;
+  description: string;
+  debit: number;
+  credit: number;
+  balance: number;
+}
+
 interface AccountingContextType {
   transactions: Transaction[];
+  journalEntries: StoredJournalEntry[];
   addJournalEntry: (payload: NewJournalPayload) => void;
+  getLedgerEntries: (accountCode: string) => LedgerEntry[];
   bankBalances: typeof BANK_BALANCES;
   revenueMTD: number;
   cashInflow: number;
@@ -36,9 +63,11 @@ interface AccountingContextType {
 const AccountingContext = createContext<AccountingContextType | undefined>(undefined);
 
 const STORAGE_KEY = "asia_plastik_clean_v2";
+const STORAGE_JOURNALS_KEY = "asia_plastik_clean_journals_v2";
 
 export function AccountingProvider({ children }: { children: React.ReactNode }) {
   const [transactions, setTransactions] = useState<Transaction[]>(RECENT_TRANSACTIONS);
+  const [journalEntries, setJournalEntries] = useState<StoredJournalEntry[]>([]);
   const [bankBalances, setBankBalances] = useState(BANK_BALANCES);
 
   // Load from localStorage if available (hanya data bersih baru)
@@ -55,6 +84,16 @@ export function AccountingProvider({ children }: { children: React.ReactNode }) 
       } else {
         setTransactions([]);
       }
+
+      const savedJournals = localStorage.getItem(STORAGE_JOURNALS_KEY);
+      if (savedJournals) {
+        const parsedJournals = JSON.parse(savedJournals);
+        if (Array.isArray(parsedJournals)) {
+          setJournalEntries(parsedJournals);
+        }
+      } else {
+        setJournalEntries([]);
+      }
     } catch {
       // Ignore localStorage errors
     }
@@ -70,16 +109,35 @@ export function AccountingProvider({ children }: { children: React.ReactNode }) 
     }
   };
 
+  const saveJournals = (newJournals: StoredJournalEntry[]) => {
+    setJournalEntries(newJournals);
+    try {
+      localStorage.setItem(STORAGE_JOURNALS_KEY, JSON.stringify(newJournals));
+    } catch {
+      // Ignore
+    }
+  };
+
   const addJournalEntry = (payload: NewJournalPayload) => {
     // Determine primary line amounts
     let totalDebit = 0;
     let primaryAccount = "Jurnal Umum";
     let isIncome = false;
 
-    payload.lines.forEach((line) => {
+    const cleanedLines = payload.lines.map((line) => {
       const d = typeof line.debit === "number" ? line.debit : parseFloat(line.debit as string) || 0;
-      if (d > 0) {
-        totalDebit += d;
+      const c = typeof line.credit === "number" ? line.credit : parseFloat(line.credit as string) || 0;
+      return {
+        accountId: line.accountId,
+        description: line.description || "",
+        debit: d,
+        credit: c,
+      };
+    });
+
+    cleanedLines.forEach((line) => {
+      if (line.debit > 0) {
+        totalDebit += line.debit;
       }
       const acc = CHART_OF_ACCOUNTS.find((a) => a.code === line.accountId);
       if (acc?.category === "Pendapatan") {
@@ -106,7 +164,74 @@ export function AccountingProvider({ children }: { children: React.ReactNode }) 
       status: "Paid",
     };
 
+    const newJournal: StoredJournalEntry = {
+      id: `je-${Date.now()}`,
+      referenceNumber: payload.referenceNumber,
+      transactionDate: payload.transactionDate,
+      journalType: payload.journalType,
+      generalDescription: payload.generalDescription,
+      lines: cleanedLines,
+      createdAt: new Date().toISOString(),
+    };
+
     saveTransactions([newTx, ...transactions]);
+    saveJournals([newJournal, ...journalEntries]);
+  };
+
+  const getLedgerEntries = (accountCode: string): LedgerEntry[] => {
+    const matching: {
+      id: string;
+      date: string;
+      ref: string;
+      description: string;
+      debit: number;
+      credit: number;
+      timestamp: number;
+    }[] = [];
+
+    journalEntries.forEach((entry) => {
+      entry.lines.forEach((line, idx) => {
+        if (line.accountId === accountCode) {
+          matching.push({
+            id: `${entry.id}-${idx}`,
+            date: entry.transactionDate,
+            ref: entry.referenceNumber,
+            description: line.description || entry.generalDescription || "Jurnal Memorial",
+            debit: line.debit,
+            credit: line.credit,
+            timestamp: new Date(entry.transactionDate).getTime() || 0,
+          });
+        }
+      });
+    });
+
+    // Urutkan kronologis
+    matching.sort((a, b) => a.timestamp - b.timestamp);
+
+    const account = CHART_OF_ACCOUNTS.find((a) => a.code === accountCode);
+    const isDebitNormal = !account || account.category === "Aset" || account.category === "Beban";
+
+    let runningBalance = 0;
+    return matching.map((item) => {
+      if (isDebitNormal) {
+        runningBalance += item.debit - item.credit;
+      } else {
+        runningBalance += item.credit - item.debit;
+      }
+      return {
+        id: item.id,
+        date: new Intl.DateTimeFormat("id-ID", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }).format(new Date(item.date)),
+        ref: item.ref,
+        description: item.description,
+        debit: item.debit,
+        credit: item.credit,
+        balance: runningBalance,
+      };
+    });
   };
 
   // Calculate live metrics
@@ -130,7 +255,9 @@ export function AccountingProvider({ children }: { children: React.ReactNode }) 
     <AccountingContext.Provider
       value={{
         transactions,
+        journalEntries,
         addJournalEntry,
+        getLedgerEntries,
         bankBalances,
         revenueMTD,
         cashInflow,
