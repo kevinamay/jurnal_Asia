@@ -8,7 +8,9 @@ export interface UserRegistrationData {
   channel: "wa" | "email";
   role?: string;
   company?: string;
-  status?: "VERIFIED" | "PENDING";
+  status?: "ACTIVE" | "VERIFIED" | "PENDING";
+  isEmailVerified?: boolean;
+  isPhoneVerified?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -45,7 +47,9 @@ export async function saveUserRegistration(data: {
     channel: data.channel,
     role: data.role || "Staf Keuangan",
     company: "CV ASIA PLASTIK",
-    status: "VERIFIED",
+    status: "ACTIVE",
+    isEmailVerified: true,
+    isPhoneVerified: true,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };

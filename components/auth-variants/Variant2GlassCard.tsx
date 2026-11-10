@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Mail,
   Phone,
@@ -16,6 +17,7 @@ import {
 } from "lucide-react";
 
 export function Variant2GlassCard() {
+  const router = useRouter();
   const [step, setStep] = useState<1 | 2 | 3>(1); // 1: Register, 2: Channel, 3: OTP
   const [channel, setChannel] = useState<"wa" | "email">("wa");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -184,6 +186,10 @@ export function Variant2GlassCard() {
       }
 
       setIsSuccess(true);
+      // Skema redirect: Saat OTP sudah benar, email otomatis aktif dan pengguna dialihkan ke halaman login
+      setTimeout(() => {
+        router.push(`/login?verified=true&email=${encodeURIComponent(email || "")}`);
+      }, 1500);
     } catch (err) {
       console.error("Error verifying OTP:", err);
       setErrorMessage("Terjadi kesalahan saat memverifikasi kode dengan server.");
@@ -428,18 +434,25 @@ export function Variant2GlassCard() {
             )}
 
             {isSuccess ? (
-              <div className="p-5 bg-emerald-50 border border-emerald-200 rounded-2xl text-center space-y-2 animate-in fade-in duration-300">
-                <CheckCircle2 className="w-10 h-10 text-emerald-600 mx-auto" />
-                <h4 className="font-bold text-sm text-emerald-950">Akun Berhasil Diaktifkan & Tersimpan!</h4>
-                <p className="text-xs text-emerald-700">
-                  Verifikasi 2-faktor selesai. Data registrasi nama, email, dan WhatsApp telah tersimpan di database Firebase. Anda sekarang memiliki otorisasi penuh untuk mengakses portal akuntansi.
-                </p>
-                <Link
-                  href="/dashboard"
-                  className="inline-block mt-3 px-5 py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs rounded-xl shadow-sm transition-all"
-                >
-                  Buka Dashboard Finansial
-                </Link>
+              <div className="p-6 bg-emerald-50/90 border border-emerald-200/90 rounded-2xl text-center space-y-3 animate-in fade-in zoom-in-95 duration-300">
+                <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto text-emerald-600 shadow-2xs">
+                  <CheckCircle2 className="w-7 h-7" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm text-emerald-950">Email & Akun Berhasil Diaktifkan!</h4>
+                  <p className="text-xs text-emerald-700 mt-1 leading-relaxed">
+                    Verifikasi OTP sukses. Status email Anda telah AKTIF di database Firebase. Mengalihkan Anda ke halaman login...
+                  </p>
+                </div>
+                <div className="pt-2">
+                  <Link
+                    href={`/login?verified=true&email=${encodeURIComponent(email || "")}`}
+                    className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs rounded-xl shadow-sm shadow-sky-500/25 transition-all active:scale-[0.99]"
+                  >
+                    <span>Masuk ke Halaman Login Sekarang</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
               </div>
             ) : (
               <div className="space-y-4">

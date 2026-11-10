@@ -1,17 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Mail, Lock, Eye, EyeOff, ArrowRight, HelpCircle } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Mail, Lock, Eye, EyeOff, ArrowRight, HelpCircle, CheckCircle2 } from "lucide-react";
 
 export function Variant3Minimalist() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isJustVerified, setIsJustVerified] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("verified") === "true") {
+      setIsJustVerified(true);
+      const queryEmail = searchParams.get("email");
+      if (queryEmail) {
+        setEmail(decodeURIComponent(queryEmail));
+      }
+    }
+  }, [searchParams]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,6 +72,19 @@ export function Variant3Minimalist() {
 
         {/* Clean White Glassmorphic Card */}
         <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-7 border border-white/90 shadow-[0_20px_45px_rgba(14,165,233,0.08),0_2px_6px_rgba(15,23,42,0.04)] space-y-5">
+          {/* Banner Notifikasi jika baru saja menyelesaikan OTP */}
+          {isJustVerified && (
+            <div className="p-3.5 bg-emerald-50 border border-emerald-200/90 rounded-2xl text-xs flex items-start gap-2.5 text-emerald-900 shadow-2xs animate-in fade-in slide-in-from-top-2 duration-300">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <div className="space-y-0.5">
+                <p className="font-bold text-emerald-950">Email & Akun Anda Telah Aktif!</p>
+                <p className="text-[11px] text-emerald-700 leading-relaxed">
+                  Verifikasi OTP sukses dan data pendaftaran Anda telah tersimpan di Firebase. Silakan masukkan kata sandi untuk masuk ke Dashboard Keuangan.
+                </p>
+              </div>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4 text-xs">
             <div>
               <label className="block font-bold text-slate-700 mb-1">
