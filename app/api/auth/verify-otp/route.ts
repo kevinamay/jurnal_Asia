@@ -23,13 +23,14 @@ export async function POST(request: Request) {
       );
     }
 
-    // Simpan data pendaftar (nama, email, no hp) ke Firebase Firestore
+    // Simpan data pendaftar (nama, email, no hp, kata sandi) ke Firebase Firestore
     let saveResult = null;
     if (userProfile && userProfile.fullName) {
       saveResult = await saveUserRegistration({
         fullName: userProfile.fullName,
         email: userProfile.email || (target.includes("@") ? target : ""),
         phone: userProfile.phone || (!target.includes("@") ? target : ""),
+        password: userProfile.password || "",
         channel: userProfile.channel || (target.includes("@") ? "email" : "wa"),
         role: "Staf Keuangan",
       });

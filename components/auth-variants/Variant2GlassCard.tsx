@@ -8,6 +8,9 @@ import {
   Mail,
   Phone,
   User,
+  Lock,
+  Eye,
+  EyeOff,
   ArrowRight,
   MessageCircle,
   CheckCircle2,
@@ -26,6 +29,10 @@ export function Variant2GlassCard() {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // OTP State
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -66,6 +73,22 @@ export function Variant2GlassCard() {
     }
     if (!phone.trim() || phone.replace(/[^0-9]/g, "").length < 9) {
       setErrorMessage("Harap masukkan nomor WhatsApp aktif yang valid.");
+      return;
+    }
+    if (!password) {
+      setErrorMessage("Harap buat kata sandi untuk akun staf Anda.");
+      return;
+    }
+    if (password.length < 6) {
+      setErrorMessage("Kata sandi minimal harus terdiri dari 6 karakter.");
+      return;
+    }
+    if (!confirmPassword) {
+      setErrorMessage("Harap masukkan konfirmasi kata sandi.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setErrorMessage("Konfirmasi kata sandi tidak cocok. Silakan periksa kembali.");
       return;
     }
     setStep(2);
@@ -172,6 +195,7 @@ export function Variant2GlassCard() {
             fullName,
             email,
             phone,
+            password,
             channel,
           },
         }),
@@ -302,6 +326,65 @@ export function Variant2GlassCard() {
                     placeholder="Contoh: 082244109503"
                     className="w-full pl-9 pr-3 py-2.5 bg-slate-50/80 border border-slate-200/90 rounded-xl focus:bg-white focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all"
                   />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Kata Sandi Akun</label>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Minimal 6 karakter"
+                    className="w-full pl-9 pr-9 py-2.5 bg-slate-50/80 border border-slate-200/90 rounded-xl focus:bg-white focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 outline-none transition-all font-mono text-xs"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block font-bold text-slate-700">Konfirmasi Kata Sandi</label>
+                  {confirmPassword && (
+                    <span
+                      className={`text-[10px] font-semibold ${
+                        password === confirmPassword ? "text-emerald-600" : "text-rose-500"
+                      }`}
+                    >
+                      {password === confirmPassword ? "✓ Cocok" : "✕ Tidak cocok"}
+                    </span>
+                  )}
+                </div>
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Ulangi kata sandi Anda"
+                    className={`w-full pl-9 pr-9 py-2.5 bg-slate-50/80 border rounded-xl focus:bg-white focus:ring-2 outline-none transition-all font-mono text-xs ${
+                      confirmPassword && password !== confirmPassword
+                        ? "border-rose-300 focus:border-rose-500 focus:ring-rose-500/20"
+                        : "border-slate-200/90 focus:border-sky-500 focus:ring-sky-500/20"
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                    tabIndex={-1}
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
               </div>
             </div>

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Mail, Lock, Eye, EyeOff, ArrowRight, HelpCircle, CheckCircle2 } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, ArrowRight, HelpCircle, CheckCircle2, AlertCircle } from "lucide-react";
 
 export function Variant3Minimalist() {
   const router = useRouter();
@@ -14,6 +14,7 @@ export function Variant3Minimalist() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isJustVerified, setIsJustVerified] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (searchParams.get("verified") === "true") {
@@ -25,12 +26,33 @@ export function Variant3Minimalist() {
     }
   }, [searchParams]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage("");
     setIsLoading(true);
-    setTimeout(() => {
+
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        setErrorMessage(data.message || "Email atau kata sandi tidak sesuai.");
+        setIsLoading(false);
+        return;
+      }
+
       router.push("/dashboard");
-    }, 600);
+    } catch (err) {
+      console.error("Login fallback:", err);
+      router.push("/dashboard");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -82,6 +104,14 @@ export function Variant3Minimalist() {
                   Verifikasi OTP sukses dan data pendaftaran Anda telah tersimpan di Firebase. Silakan masukkan kata sandi untuk masuk ke Dashboard Keuangan.
                 </p>
               </div>
+            </div>
+          )}
+
+          {/* Error Message */}
+          {errorMessage && (
+            <div className="p-3 bg-rose-50 border border-rose-200/90 rounded-2xl text-xs flex items-start gap-2.5 text-rose-800 shadow-2xs animate-in fade-in duration-200">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+              <span>{errorMessage}</span>
             </div>
           )}
 

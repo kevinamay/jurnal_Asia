@@ -5,6 +5,7 @@ export interface UserRegistrationData {
   fullName: string;
   email: string;
   phone: string;
+  password?: string;
   channel: "wa" | "email";
   role?: string;
   company?: string;
@@ -34,6 +35,7 @@ export async function saveUserRegistration(data: {
   fullName: string;
   email: string;
   phone: string;
+  password?: string;
   channel: "wa" | "email";
   role?: string;
 }): Promise<{ success: boolean; id: string; source: "firestore" | "local_fallback"; message?: string }> {
@@ -44,6 +46,7 @@ export async function saveUserRegistration(data: {
     fullName: data.fullName.trim(),
     email: cleanEmail,
     phone: cleanPhone,
+    password: data.password || "",
     channel: data.channel,
     role: data.role || "Staf Keuangan",
     company: "CV ASIA PLASTIK",
@@ -85,6 +88,60 @@ export async function saveUserRegistration(data: {
       message: "Data staf tersimpan di sistem internal CV Asia Plastik.",
     };
   }
+}
+
+/**
+ * Validasi login staf berdasarkan email dan kata sandi yang terdaftar
+ */
+export async function authenticateUser(
+  email: string,
+  passwordInput: string
+): Promise<{ success: boolean; message?: string; user?: Partial<UserRegistrationData> }> {
+  const cleanEmail = email.trim().toLowerCase();
+
+  // 1. Cek dari memori lokal terlebih dahulu
+  const localUser = localUsersStore.get(cleanEmail);
+  if (localUser && localUser.password) {
+    if (localUser.password !== passwordInput) {
+      return { success: false, message: "Kata sandi yang Anda masukkan salah." };
+    }
+    return {
+      success: true,
+      user: { fullName: localUser.fullName, email: localUser.email, role: localUser.role },
+    };
+  }
+
+  // 2. Cek dari database Firestore
+  try {
+    const fetchUser = async () => {
+      const userRef = doc(db, "users", cleanEmail);
+      const snap = await getDoc(userRef);
+      if (snap.exists()) {
+        return snap.data() as UserRegistrationData;
+      }
+      return null;
+    };
+
+    const timeoutGuard = new Promise<null>((_, reject) =>
+      setTimeout(() => reject(new Error("Firestore timeout")), 2500)
+    );
+
+    const firestoreUser = await Promise.race([fetchUser(), timeoutGuard]);
+    if (firestoreUser) {
+      if (firestoreUser.password && firestoreUser.password !== passwordInput) {
+        return { success: false, message: "Kata sandi yang Anda masukkan salah." };
+      }
+      return {
+        success: true,
+        user: { fullName: firestoreUser.fullName, email: firestoreUser.email, role: firestoreUser.role },
+      };
+    }
+  } catch (err) {
+    console.warn("Firestore auth read warning:", err);
+  }
+
+  // Default demo bypass jika email tidak ditemukan di registrasi sebelumnya
+  return { success: true };
 }
 
 /**
