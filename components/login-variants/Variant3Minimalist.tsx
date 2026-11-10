@@ -22,19 +22,32 @@ export function Variant3Minimalist() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 flex flex-col items-center justify-center p-6 font-sans text-slate-900 py-12">
+    <div className="min-h-screen w-full bg-gradient-to-br from-sky-100/70 via-white to-sky-50 flex flex-col items-center justify-center p-6 font-sans text-slate-900 py-12 relative overflow-hidden">
+      {/* Decorative gradient ambient orbs & glow (Putih & Biru Muda) */}
+      <div className="absolute -top-24 -left-24 w-96 h-96 bg-sky-200/50 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-sky-300/35 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[36rem] h-[36rem] bg-gradient-to-tr from-sky-100/40 via-sky-200/20 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+
+      {/* Subtle modern texture overlay */}
+      <div
+        className="absolute inset-0 bg-[radial-gradient(#0284c7_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.035] pointer-events-none"
+        aria-hidden="true"
+      ></div>
+
       {/* Centered Minimalist Shell */}
-      <div className="w-full max-w-sm space-y-8">
+      <div className="w-full max-w-sm space-y-7 relative z-10">
         {/* Top Minimal Brand */}
         <div className="text-center space-y-3">
-          <Image
-            src="/logos/logo.webp"
-            alt="CV ASIA PLASTIK"
-            width={170}
-            height={58}
-            className="h-8 w-auto object-contain mx-auto"
-            priority
-          />
+          <div className="inline-block bg-white/85 backdrop-blur-md px-5 py-2 rounded-2xl shadow-xs border border-sky-100/80 mb-1">
+            <Image
+              src="/logos/logo.webp"
+              alt="CV ASIA PLASTIK"
+              width={170}
+              height={58}
+              className="h-8 w-auto object-contain mx-auto"
+              priority
+            />
+          </div>
           <div>
             <h1 className="text-xl font-bold tracking-tight text-slate-900">
               Masuk ke Portal Asia Plastik
@@ -45,8 +58,8 @@ export function Variant3Minimalist() {
           </div>
         </div>
 
-        {/* Clean White Card */}
-        <div className="bg-white rounded-3xl p-7 border border-slate-200/90 shadow-sm space-y-5">
+        {/* Clean White Glassmorphic Card */}
+        <div className="bg-white/95 backdrop-blur-xl rounded-3xl p-7 border border-white/90 shadow-[0_20px_45px_rgba(14,165,233,0.08),0_2px_6px_rgba(15,23,42,0.04)] space-y-5">
           <form onSubmit={handleSubmit} className="space-y-4 text-xs">
             <div>
               <label className="block font-bold text-slate-700 mb-1">
@@ -98,7 +111,7 @@ export function Variant3Minimalist() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs rounded-xl shadow-xs transition-all flex items-center justify-center gap-2 mt-2 cursor-pointer active:scale-[0.99]"
+              className="w-full py-3 bg-sky-500 hover:bg-sky-600 text-white font-bold text-xs rounded-xl shadow-sm shadow-sky-500/25 transition-all flex items-center justify-center gap-2 mt-2 cursor-pointer active:scale-[0.99]"
             >
               {isLoading ? (
                 <span>Memproses...</span>
@@ -123,9 +136,9 @@ export function Variant3Minimalist() {
         <div className="text-center">
           <Link
             href="mailto:it-support@asiaplastik.com"
-            className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-600 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-sky-700 transition-colors bg-white/70 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-sky-100/80 shadow-2xs"
           >
-            <HelpCircle className="w-3.5 h-3.5" />
+            <HelpCircle className="w-3.5 h-3.5 text-sky-500" />
             <span>Pusat Bantuan IT Pabrik Surabaya</span>
           </Link>
         </div>
