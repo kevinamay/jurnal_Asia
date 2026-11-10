@@ -212,7 +212,7 @@ export function Sidebar() {
       </nav>
 
       {/* Footer Info & Quick System Status */}
-      <div className="p-3 border-t border-slate-100 bg-slate-50/50 space-y-2">
+      <div className="p-3 border-t border-slate-100 bg-slate-50/50">
         <div className="bg-white border border-slate-200/80 rounded-lg p-2.5">
           <div className="flex items-center justify-between text-xs mb-1">
             <span className="font-medium text-slate-700">Tahun Buku 2026</span>
@@ -228,16 +228,6 @@ export function Sidebar() {
             </span>
             <span className="text-slate-400 font-mono text-[10px]">v2.4</span>
           </div>
-        </div>
-
-        <div className="flex items-center justify-between px-1 text-slate-400 text-xs">
-          <button
-            onClick={handleLogout}
-            className="hover:text-rose-600 flex items-center gap-1 transition-colors text-[11px] font-medium"
-          >
-            <LogOut className="w-3.5 h-3.5" /> Log Out
-          </button>
-          <span className="text-[10px] text-slate-400">Portal Keuangan</span>
         </div>
       </div>
     </aside>
