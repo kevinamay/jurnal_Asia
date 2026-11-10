@@ -12,8 +12,10 @@ import {
   FilePlus2,
   Receipt,
   FileText,
+  LogOut,
+  User,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const TITLE_MAP: Record<string, { title: string; subtitle: string }> = {
   "/": {
@@ -49,6 +51,32 @@ const TITLE_MAP: Record<string, { title: string; subtitle: string }> = {
 export function Topbar() {
   const pathname = usePathname();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{
+    fullName?: string;
+    email?: string;
+  } | null>(null);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("asia_auth_user");
+      if (saved) {
+        setCurrentUser(JSON.parse(saved));
+      }
+    } catch {
+      // Ignore
+    }
+  }, []);
+
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem("asia_auth_user");
+      localStorage.removeItem("asia_current_session");
+    } catch {
+      // Ignore
+    }
+    window.location.href = "/login";
+  };
 
   const currentRouteInfo =
     TITLE_MAP[pathname] || {
@@ -62,6 +90,15 @@ export function Topbar() {
     month: "short",
     year: "numeric",
   }).format(new Date());
+
+  const displayName = currentUser?.fullName || "Staf Keuangan";
+  const userInitials = displayName
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase() || "AP";
 
   return (
     <header className="h-16 bg-white border-b border-slate-200/90 px-6 flex items-center justify-between sticky top-0 z-30 shadow-xs">
@@ -105,7 +142,7 @@ export function Topbar() {
           className="relative p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-lg transition-colors border border-transparent hover:border-slate-200"
         >
           <Bell className="w-4 h-4" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white"></span>
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white"></span>
         </button>
 
         <div className="h-6 w-[1px] bg-slate-200 mx-0.5"></div>
@@ -165,19 +202,52 @@ export function Topbar() {
           )}
         </div>
 
-        {/* User Profile Pill */}
-        <div className="flex items-center gap-2.5 pl-1.5 py-1 pr-2 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200 cursor-pointer">
-          <div className="w-8 h-8 rounded-full bg-sky-100 text-sky-700 font-bold text-xs flex items-center justify-center border border-sky-300">
-            SJ
+        {/* User Profile Pill with Dropdown */}
+        <div className="relative">
+          <div
+            onClick={() => setProfileOpen(!profileOpen)}
+            className="flex items-center gap-2.5 pl-1.5 py-1 pr-2 rounded-lg hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200 cursor-pointer select-none"
+          >
+            <div className="w-8 h-8 rounded-full bg-sky-100 text-sky-700 font-bold text-xs flex items-center justify-center border border-sky-300">
+              {userInitials}
+            </div>
+            <div className="hidden sm:block text-left">
+              <p className="text-xs font-bold text-slate-800 leading-tight truncate max-w-[120px]">
+                {displayName}
+              </p>
+              <p className="text-[10px] text-slate-500 leading-tight">CV ASIA PLASTIK</p>
+            </div>
+            <ChevronDown className="w-3 h-3 text-slate-400 hidden sm:block" />
           </div>
-          <div className="hidden sm:block text-left">
-            <p className="text-xs font-bold text-slate-800 leading-tight">Sarah Jenkins</p>
-            <p className="text-[10px] text-slate-500 leading-tight">Senior Accountant</p>
-          </div>
-          <ChevronDown className="w-3 h-3 text-slate-400 hidden sm:block" />
+
+          {profileOpen && (
+            <div
+              className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-slate-200 py-1.5 z-50 text-xs animate-in fade-in slide-in-from-top-1"
+              onMouseLeave={() => setProfileOpen(false)}
+            >
+              <div className="px-3.5 py-2.5 border-b border-slate-100">
+                <p className="font-bold text-slate-900 truncate">{displayName}</p>
+                <p className="text-[11px] text-slate-500 truncate">
+                  {currentUser?.email || "staf@asiaplastik.com"}
+                </p>
+                <span className="inline-block mt-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                  Sesi Aktif
+                </span>
+              </div>
+              <div className="p-1">
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-rose-600 hover:bg-rose-50 hover:text-rose-700 font-semibold rounded-lg transition-colors cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5 text-rose-500" />
+                  <span>Keluar Akun (Log Out)</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>
   );
 }
-

@@ -46,6 +46,15 @@ export function Variant3Minimalist() {
         return;
       }
 
+      try {
+        localStorage.setItem(
+          "asia_auth_user",
+          JSON.stringify(data.user || { email, fullName: "Staf Keuangan" })
+        );
+      } catch {
+        // Ignore
+      }
+
       router.push("/dashboard");
     } catch (err) {
       console.error("Login fallback:", err);
