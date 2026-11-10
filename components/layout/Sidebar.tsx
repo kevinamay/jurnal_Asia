@@ -14,7 +14,6 @@ import {
   ShieldCheck,
   HelpCircle,
   Settings,
-  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -78,32 +77,10 @@ const NAV_ITEMS: NavSection[] = [
       },
     ],
   },
-  {
-    group: "SESI PENGGUNA",
-    items: [
-      {
-        label: "Keluar (Log Out)",
-        href: "#logout",
-        icon: LogOut,
-        badge: null,
-        isLogout: true,
-      },
-    ],
-  },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
-
-  const handleLogout = () => {
-    try {
-      localStorage.removeItem("asia_auth_user");
-      localStorage.removeItem("asia_current_session");
-    } catch {
-      // Ignore localStorage errors
-    }
-    window.location.href = "/login";
-  };
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200/90 flex flex-col shrink-0 h-screen sticky top-0 z-40 select-none">
@@ -143,27 +120,6 @@ export function Sidebar() {
             <ul className="space-y-1">
               {section.items.map((item) => {
                 const Icon = item.icon;
-
-                if (item.isLogout) {
-                  return (
-                    <li key="logout-btn">
-                      <button
-                        type="button"
-                        onClick={handleLogout}
-                        className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-lg text-rose-600 hover:text-rose-700 hover:bg-rose-50 transition-all group cursor-pointer"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <Icon className="w-4 h-4 text-rose-500 group-hover:text-rose-600 transition-colors" />
-                          <span className="font-semibold">{item.label}</span>
-                        </div>
-                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-rose-100/80 text-rose-700 border border-rose-200">
-                          Selesai
-                        </span>
-                      </button>
-                    </li>
-                  );
-                }
-
                 const isActive =
                   item.href === "/"
                     ? pathname === "/" || pathname === "/dashboard"
